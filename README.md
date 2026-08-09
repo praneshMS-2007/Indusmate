@@ -9,7 +9,7 @@
 |---|---|
 | **Project Title** | IndusMate |
 | **Team Name** | **COLDSTACK** |
-| **Live Demo** | _Deployment pending — link goes here_ |
+| **Live Demo** | **https://indusmate.vercel.app** |
 | **Repository** | https://github.com/praneshMS-2007/Indusmate |
 
 ---

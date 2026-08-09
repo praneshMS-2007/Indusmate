@@ -126,17 +126,17 @@ export function ListingForm({ initialType }: { initialType?: ListingType }) {
               onClick={() => changeType(t)}
               aria-pressed={t === type}
               className={
-                "rounded-lg border p-3 text-left transition-colors " +
+                "rounded-md border p-3 text-left transition-colors " +
                 (t === type
-                  ? "border-amber-500/60 bg-amber-500/10"
-                  : "border-border/60 hover:border-border")
+                  ? "border-amber/60 bg-amber-muted/50"
+                  : "border-line hover:border-line-strong")
               }
             >
               <span className="block text-sm font-medium">{LISTING_TYPE_META[t].label}</span>
             </button>
           ))}
         </div>
-        <p className="text-xs text-muted-foreground">{meta.blurb}</p>
+        <p className="text-xs text-text-secondary">{meta.blurb}</p>
       </section>
 
       {/* ---- Shared fields — identical for every market ---------------- */}
@@ -261,7 +261,7 @@ export function ListingForm({ initialType }: { initialType?: ListingType }) {
               value={common.referencePrice}
               onChange={(e) => setCommon({ ...common, referencePrice: e.target.value })}
             />
-            <p className="text-xs text-muted-foreground">Whole rupees, per {unit}.</p>
+            <p className="text-xs text-text-secondary">Whole rupees, per {unit}.</p>
           </div>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="closesAt">Bidding closes</Label>
@@ -285,10 +285,10 @@ export function ListingForm({ initialType }: { initialType?: ListingType }) {
                 onClick={() => setDirection(d)}
                 aria-pressed={d === direction}
                 className={
-                  "flex items-start gap-2 rounded-lg border p-3 text-left transition-colors " +
+                  "flex items-start gap-2 rounded-md border p-3 text-left transition-colors " +
                   (d === direction
-                    ? "border-amber-500/60 bg-amber-500/10"
-                    : "border-border/60 hover:border-border")
+                    ? "border-amber/60 bg-amber-muted/50"
+                    : "border-line hover:border-line-strong")
                 }
               >
                 {d === "REVERSE" ? (
@@ -300,7 +300,7 @@ export function ListingForm({ initialType }: { initialType?: ListingType }) {
                   <span className="block text-sm font-medium">
                     {d === "REVERSE" ? "Reverse" : "Forward"}
                   </span>
-                  <span className="block text-xs text-muted-foreground">
+                  <span className="block text-xs text-text-secondary">
                     {d === "REVERSE" ? "Sellers bid it down" : "Buyers bid it up"}
                   </span>
                 </span>
@@ -311,10 +311,10 @@ export function ListingForm({ initialType }: { initialType?: ListingType }) {
       </section>
 
       {/* ---- Spec — the ONLY part that differs by market --------------- */}
-      <section className="flex flex-col gap-4 rounded-lg border border-border/60 bg-card/50 p-4">
+      <section className="flex flex-col gap-4 rounded-md border border-line bg-surface-raised/50 p-4">
         <div>
           <h2 className="text-sm font-medium">{meta.label} specification</h2>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-text-secondary">
             These fields come from the typed spec for this market. Change the market above and they
             change with it.
           </p>
@@ -369,7 +369,7 @@ function SpecInput({
             type="checkbox"
             checked={value === true}
             onChange={(e) => onChange(e.target.checked)}
-            className="size-4 accent-amber-500"
+            className="size-4 accent-amber"
           />
           {field.label}
         </label>
@@ -377,8 +377,8 @@ function SpecInput({
         <>
           <Label htmlFor={id}>
             {field.label}
-            {field.suffix && <span className="ml-1 text-muted-foreground">({field.suffix})</span>}
-            {field.required && <span className="ml-1 text-amber-400">*</span>}
+            {field.suffix && <span className="ml-1 text-text-secondary">({field.suffix})</span>}
+            {field.required && <span className="ml-1 text-amber">*</span>}
           </Label>
 
           {field.kind === "select" ? (
@@ -409,7 +409,7 @@ function SpecInput({
         </>
       )}
 
-      {field.help && <p className="text-xs text-muted-foreground">{field.help}</p>}
+      {field.help && <p className="text-xs text-text-secondary">{field.help}</p>}
     </div>
   );
 }

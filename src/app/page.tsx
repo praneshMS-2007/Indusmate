@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ShieldCheck } from "lucide-react";
+import { ArrowRight, Lock, Plus } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
 import { getCurrentOrg } from "@/lib/auth";
@@ -19,15 +19,15 @@ export default async function Home() {
   return (
     <main className="flex flex-col gap-8">
       <section className="flex flex-col gap-3">
-        <p className="text-sm text-muted-foreground">
-          Signed in as <span className="text-foreground">{org.name}</span> · {org.city}
+        <p className="type-eyebrow">
+          Acting as {org.name} · {org.city}
         </p>
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+        <h1 className="type-display text-3xl sm:text-5xl">
           One negotiation engine.
           <br />
-          <span className="text-amber-400">Five industrial markets.</span>
+          <span className="text-amber">Five industrial markets.</span>
         </h1>
-        <p className="max-w-prose text-sm text-muted-foreground sm:text-base">
+        <p className="max-w-prose text-sm text-text-secondary sm:text-base">
           A raw material lot, a waste stream, an idle machine-hour, a technician&apos;s shift and a
           truck&apos;s return leg are the same object: a capacity with a spec, a location, a time
           window, and a price nobody has agreed yet. So they are one table and one state machine.
@@ -41,8 +41,19 @@ export default async function Home() {
             </Link>
           </Button>
           <Button asChild variant="outline">
-            <Link href="/deals">{dealCount} deals in flight</Link>
+            <Link href="/listings/new">
+              <Plus className="size-4" />
+              Post a listing
+            </Link>
           </Button>
+          {dealCount > 0 && (
+            <Button asChild variant="ghost">
+              <Link href="/deals">
+                <span className="type-data">{dealCount}</span>
+                &nbsp;deals in flight
+              </Link>
+            </Button>
+          )}
         </div>
       </section>
 
@@ -53,31 +64,31 @@ export default async function Home() {
             <Link
               key={type}
               href={`/browse?type=${type}`}
-              className="group rounded-lg border border-border/60 bg-card p-4 transition-colors hover:border-amber-500/50"
+              className="group rounded-md border border-line bg-surface-raised p-4 transition-colors hover:border-amber/50"
             >
               <div className="flex items-baseline justify-between gap-2">
                 <h2 className="font-medium">{meta.label}</h2>
-                <span className="font-mono text-sm text-muted-foreground">
+                <span className="type-data text-sm text-text-tertiary">
                   {counts.get(type) ?? 0}
                 </span>
               </div>
-              <p className="mt-1 text-xs text-muted-foreground">{meta.blurb}</p>
-              <p className="mt-2 text-[11px] tracking-wide text-muted-foreground/70 uppercase">
+              <p className="mt-1 text-xs text-text-secondary">{meta.blurb}</p>
+              <p className="type-eyebrow mt-2">
                 {meta.defaultDirection === "REVERSE"
-                  ? "Reverse auction · price competes down"
-                  : "Forward auction · price competes up"}
+                  ? "Reverse · price competes down"
+                  : "Forward · price competes up"}
               </p>
             </Link>
           );
         })}
       </section>
 
-      <section className="rounded-lg border border-teal-500/30 bg-teal-500/5 p-4">
-        <h2 className="flex items-center gap-2 text-sm font-medium">
-          <ShieldCheck className="size-4 text-teal-400" />
+      <section className="rounded-md border border-masked/30 bg-masked-muted/40 p-4">
+        <h2 className="flex items-center gap-2 text-sm font-semibold">
+          <Lock className="size-4 text-masked" />
           Bidding here is sealed
         </h2>
-        <p className="mt-1 max-w-prose text-sm text-muted-foreground">
+        <p className="mt-1 max-w-prose text-sm text-text-secondary">
           No bidder can see another bidder&apos;s number. The listing owner sees reputation without
           identity — a handle, a rating, a completion record. Names, contacts and GSTIN are released
           to both sides only once a deal is accepted.

@@ -120,8 +120,8 @@ function FilterChip({
       className={
         "rounded-full border px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors " +
         (active
-          ? "border-amber-500/60 bg-amber-500/15 text-amber-300"
-          : "border-border/60 text-muted-foreground hover:border-border hover:text-foreground")
+          ? "border-amber/60 bg-amber-muted text-amber"
+          : "border-line text-text-secondary hover:border-line-strong hover:text-text-primary")
       }
     >
       {children}

@@ -8,7 +8,7 @@ export const ORG_TYPE_META: Record<
   MANUFACTURER: {
     label: "Manufacturer",
     icon: Factory,
-    className: "text-amber-400",
+    className: "text-amber",
   },
   SUPPLIER: {
     label: "Supplier",
@@ -23,7 +23,7 @@ export const ORG_TYPE_META: Record<
   RECYCLER: {
     label: "Recycler",
     icon: Recycle,
-    className: "text-teal-400",
+    className: "text-teal",
   },
 };
 

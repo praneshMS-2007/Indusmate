@@ -1,11 +1,10 @@
 import { CardGridSkeleton, PageHeaderSkeleton } from "@/components/skeletons";
 
-export default function BrowseLoading() {
+export default function MyListingsLoading() {
   return (
     <main className="flex flex-col gap-5">
       <PageHeaderSkeleton />
-      <div className="h-9 w-full animate-pulse rounded-sm bg-line" />
-      <CardGridSkeleton />
+      <CardGridSkeleton count={3} />
     </main>
   );
 }

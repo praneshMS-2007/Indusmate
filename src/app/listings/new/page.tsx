@@ -15,8 +15,8 @@ export default async function NewListingPage({
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-col gap-5">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Post a listing</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="type-display text-2xl">Post a listing</h1>
+        <p className="text-sm text-text-secondary">
           Posting as <span className="text-foreground">{org.name}</span> · {org.city}
         </p>
       </div>

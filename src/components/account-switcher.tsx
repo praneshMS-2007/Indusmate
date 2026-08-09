@@ -62,13 +62,13 @@ export function AccountSwitcher({
             <CurrentIcon className={`size-4 shrink-0 ${ORG_TYPE_META[current.type].className}`} />
           )}
           <span className="flex min-w-0 flex-col items-start leading-tight">
-            <span className="flex items-center gap-1 text-[10px] font-medium tracking-wide text-muted-foreground uppercase">
+            <span className="flex items-center gap-1 text-[10px] font-medium tracking-wide text-text-secondary uppercase">
               Demo account
             </span>
             <span className="flex w-full min-w-0 items-center gap-1">
               <span className="truncate text-sm font-medium">{current.name}</span>
               {current.verified && (
-                <BadgeCheck className="size-3.5 shrink-0 text-teal-400" aria-label="KYC verified" />
+                <BadgeCheck className="size-3.5 shrink-0 text-teal" aria-label="KYC verified" />
               )}
             </span>
           </span>
@@ -77,7 +77,7 @@ export function AccountSwitcher({
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="max-h-[70vh] w-72 overflow-y-auto">
-        <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
+        <DropdownMenuLabel className="text-xs font-normal text-text-secondary">
           Switch account — no password, this is a demo stub
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
@@ -104,12 +104,12 @@ export function AccountSwitcher({
                   <span className="flex w-full items-center gap-1.5">
                     <span className="truncate text-sm font-medium">{org.name}</span>
                     {org.id === current.id && (
-                      <span className="ml-auto shrink-0 text-[10px] text-muted-foreground">
+                      <span className="ml-auto shrink-0 text-[10px] text-text-secondary">
                         current
                       </span>
                     )}
                   </span>
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-xs text-text-secondary">
                     {org.city} · {org.rating.toFixed(1)}/5 · {org.dealCount} deals
                   </span>
                 </DropdownMenuItem>

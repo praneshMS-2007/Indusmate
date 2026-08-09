@@ -46,17 +46,17 @@ export default async function ListingDetailPage({
               {reverse ? "Reverse — price competes down" : "Forward — price competes up"}
             </Badge>
             <Badge variant="secondary">{listing.status}</Badge>
-            {isOwner && <Badge className="bg-amber-500 text-black">Your listing</Badge>}
+            {isOwner && <Badge className="bg-amber text-black">Your listing</Badge>}
           </div>
 
           <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{listing.title}</h1>
 
           {listing.description && (
-            <p className="max-w-prose text-sm text-muted-foreground">{listing.description}</p>
+            <p className="max-w-prose text-sm text-text-secondary">{listing.description}</p>
           )}
         </header>
 
-        <section className="grid grid-cols-2 gap-4 rounded-lg border border-border/60 bg-card p-4 sm:grid-cols-4">
+        <section className="grid grid-cols-2 gap-4 rounded-md border border-line bg-surface-raised p-4 sm:grid-cols-4">
           <Fact
             icon={<MapPin className="size-3.5" />}
             label={listing.destCity ? "Route" : "Location"}
@@ -84,15 +84,15 @@ export default async function ListingDetailPage({
 
         <section className="flex flex-col gap-3">
           <h2 className="text-sm font-medium">{meta.label} specification</h2>
-          <dl className="divide-y divide-border/40 overflow-hidden rounded-lg border border-border/60 bg-card">
+          <dl className="divide-y divide-border/40 overflow-hidden rounded-md border border-line bg-surface-raised">
             {spec.map((row) => (
               <div key={row.label} className="grid grid-cols-3 gap-3 px-4 py-2.5 text-sm">
-                <dt className="col-span-1 text-muted-foreground">{row.label}</dt>
+                <dt className="col-span-1 text-text-secondary">{row.label}</dt>
                 <dd className="col-span-2 break-words">{row.value}</dd>
               </div>
             ))}
           </dl>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-text-secondary">
             Stored as a typed JSON payload on the shared listing table — the only thing that differs
             between this and a freight leg.
           </p>
@@ -101,8 +101,8 @@ export default async function ListingDetailPage({
 
       {/* ---- Sidebar ------------------------------------------------- */}
       <aside className="flex w-full shrink-0 flex-col gap-4 lg:w-80">
-        <section className="rounded-lg border border-border/60 bg-card p-4">
-          <h2 className="mb-3 text-xs tracking-wide text-muted-foreground uppercase">
+        <section className="rounded-md border border-line bg-surface-raised p-4">
+          <h2 className="mb-3 text-xs tracking-wide text-text-secondary uppercase">
             Listed by
           </h2>
           <div className="flex items-start gap-3">
@@ -111,18 +111,18 @@ export default async function ListingDetailPage({
               <p className="flex items-center gap-1 font-medium">
                 <span className="truncate">{listing.ownerOrg.name}</span>
                 {listing.ownerOrg.verified && (
-                  <BadgeCheck className="size-4 shrink-0 text-teal-400" aria-label="KYC verified" />
+                  <BadgeCheck className="size-4 shrink-0 text-teal" aria-label="KYC verified" />
                 )}
               </p>
-              <p className="text-xs text-muted-foreground">{listing.ownerOrg.city}</p>
-              <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
-                <Star className="size-3 fill-amber-400 text-amber-400" />
+              <p className="text-xs text-text-secondary">{listing.ownerOrg.city}</p>
+              <p className="mt-1 flex items-center gap-1 text-xs text-text-secondary">
+                <Star className="size-3 fill-amber text-amber" />
                 {listing.ownerOrg.rating.toFixed(1)}/5 · {listing.ownerOrg.dealCount} deals ·{" "}
                 {listing.ownerOrg.onTimePct}% on-time
               </p>
             </div>
           </div>
-          <p className="mt-3 border-t border-border/40 pt-3 text-xs text-muted-foreground">
+          <p className="mt-3 border-t border-line/40 pt-3 text-xs text-text-secondary">
             The party who posts is public. It is the <strong className="text-foreground">bidders</strong>{" "}
             who stay sealed.
           </p>
@@ -180,14 +180,14 @@ function Fact({
 }) {
   return (
     <div className="min-w-0">
-      <p className="flex items-center gap-1 text-[11px] tracking-wide text-muted-foreground uppercase">
+      <p className="flex items-center gap-1 text-[11px] tracking-wide text-text-secondary uppercase">
         {icon}
         {label}
       </p>
       <p className="mt-0.5 truncate text-sm font-medium" title={value}>
         {value}
       </p>
-      {hint && <p className="text-[11px] text-muted-foreground">{hint}</p>}
+      {hint && <p className="text-[11px] text-text-secondary">{hint}</p>}
     </div>
   );
 }

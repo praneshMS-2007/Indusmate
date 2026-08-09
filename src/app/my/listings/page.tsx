@@ -19,8 +19,8 @@ export default async function MyListingsPage() {
     <main className="flex flex-col gap-5">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">My Listings</h1>
-          <p className="text-sm text-muted-foreground">
+          <h1 className="type-display text-2xl">My listings</h1>
+          <p className="text-sm text-text-secondary">
             Posted by <span className="text-foreground">{org.name}</span>
           </p>
         </div>
@@ -33,12 +33,13 @@ export default async function MyListingsPage() {
       </div>
 
       {listings.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed border-border/60 py-16 text-center">
-          <PackageOpen className="size-8 text-muted-foreground/50" />
+        <div className="flex flex-col items-center gap-3 rounded-md border border-dashed border-line py-16 text-center">
+          <PackageOpen className="size-8 text-text-tertiary" />
           <div>
-            <p className="font-medium">{org.name} has not posted anything yet</p>
-            <p className="text-sm text-muted-foreground">
-              Any of the five markets, one form.
+            <p className="font-medium">You have not posted anything yet</p>
+            <p className="mx-auto mt-1 max-w-sm text-sm text-text-secondary">
+              Post spare capacity in any of the five markets — a truck leg, an idle machine-hour, a
+              waste stream. One form covers all of them, and bidders stay sealed until you accept.
             </p>
           </div>
           <Button asChild size="sm">

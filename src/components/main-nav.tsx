@@ -4,11 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Compass, Map, Package, Gavel, Handshake } from "lucide-react";
 
+// Sentence case throughout, and named for what the operator has rather than
+// for the table it comes from.
 const LINKS = [
   { href: "/browse", label: "Browse", icon: Compass },
   { href: "/map", label: "Map", icon: Map },
-  { href: "/my/listings", label: "My Listings", icon: Package },
-  { href: "/my/bids", label: "My Bids", icon: Gavel },
+  { href: "/my/listings", label: "My listings", icon: Package },
+  { href: "/my/bids", label: "My bids", icon: Gavel },
   { href: "/deals", label: "Deals", icon: Handshake },
 ] as const;
 
@@ -31,10 +33,12 @@ export function MainNav() {
                 href={href}
                 aria-current={active ? "page" : undefined}
                 className={
-                  "flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors " +
+                  // 44px tall so it clears the touch-target minimum without a
+                  // pseudo-element; the nav is the most-tapped thing here.
+                  "flex h-11 items-center gap-1.5 rounded-md px-3 text-sm font-medium whitespace-nowrap transition-colors " +
                   (active
-                    ? "bg-accent text-foreground"
-                    : "text-muted-foreground hover:bg-accent/50 hover:text-foreground")
+                    ? "bg-amber-muted text-amber"
+                    : "text-text-secondary hover:bg-surface-raised hover:text-text-primary")
                 }
               >
                 <Icon className="size-4" />
