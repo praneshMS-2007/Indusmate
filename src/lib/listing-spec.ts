@@ -104,8 +104,14 @@ export interface ListingTypeMeta {
   /** Default auction direction. Reverse = price competes down. */
   defaultDirection: "REVERSE" | "FORWARD";
   defaultUnit: string;
-  /** Tailwind token stem used for the map marker and card accents. */
-  accent: string;
+  /**
+   * Full, static Tailwind classes. NOT a colour stem to interpolate —
+   * Tailwind scans source text at build time, so `text-${stem}-400` is
+   * purged and renders colourless.
+   */
+  badgeClass: string;
+  /** Hex for the Leaflet map markers in Block 5, which cannot use classes. */
+  markerColor: string;
   /** Does this market have a destination as well as an origin? */
   hasDestination: boolean;
 }
@@ -116,7 +122,8 @@ export const LISTING_TYPE_META: Record<ListingType, ListingTypeMeta> = {
     blurb: "Suppliers list stock; manufacturers bid to buy.",
     defaultDirection: "REVERSE",
     defaultUnit: "tonnes",
-    accent: "amber",
+    badgeClass: "border-amber-500/40 text-amber-400",
+    markerColor: "#f59e0b",
     hasDestination: false,
   },
   BYPRODUCT: {
@@ -124,7 +131,8 @@ export const LISTING_TYPE_META: Record<ListingType, ListingTypeMeta> = {
     blurb: "List waste by specification. Other plants buy it as feedstock.",
     defaultDirection: "FORWARD",
     defaultUnit: "tonnes/month",
-    accent: "teal",
+    badgeClass: "border-teal-500/40 text-teal-400",
+    markerColor: "#2dd4bf",
     hasDestination: false,
   },
   EQUIPMENT: {
@@ -132,7 +140,8 @@ export const LISTING_TYPE_META: Record<ListingType, ListingTypeMeta> = {
     blurb: "Rent out idle machinery by the hour.",
     defaultDirection: "FORWARD",
     defaultUnit: "hours",
-    accent: "sky",
+    badgeClass: "border-sky-500/40 text-sky-400",
+    markerColor: "#38bdf8",
     hasDestination: false,
   },
   LABOUR: {
@@ -140,7 +149,8 @@ export const LISTING_TYPE_META: Record<ListingType, ListingTypeMeta> = {
     blurb: "Certified technicians booked in scheduled blocks.",
     defaultDirection: "REVERSE",
     defaultUnit: "shifts",
-    accent: "violet",
+    badgeClass: "border-violet-500/40 text-violet-400",
+    markerColor: "#a78bfa",
     hasDestination: false,
   },
   FREIGHT: {
@@ -148,7 +158,8 @@ export const LISTING_TYPE_META: Record<ListingType, ListingTypeMeta> = {
     blurb: "Post an A-to-B transit need; transporters bid it down.",
     defaultDirection: "REVERSE",
     defaultUnit: "tonnes",
-    accent: "rose",
+    badgeClass: "border-rose-500/40 text-rose-400",
+    markerColor: "#fb7185",
     hasDestination: true,
   },
 };
