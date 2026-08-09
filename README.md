@@ -11,6 +11,7 @@
 | **Team Name** | **COLDSTACK** |
 | **Live Demo** | **https://indusmate.vercel.app** |
 | **Repository** | https://github.com/praneshMS-2007/Indusmate |
+| **Demo script** | [`DEMO.md`](./DEMO.md) — under 4 minutes, account-by-account |
 
 ---
 
@@ -100,16 +101,19 @@ Bidding runs in both directions on the same machine, set by one flag:
 | Database | Supabase Postgres | Managed, free tier, `ap-south-1` region |
 | ORM | Prisma 6 | Typed queries; JSON column for the spec payload |
 | UI | Tailwind CSS v4 + shadcn/ui | Mobile-first, no design system to build |
-| Maps | Leaflet + react-leaflet + OpenStreetMap | No API key, no billing, no vendor lock-in |
-| AI | Google Gemini (`gemini-2.5-flash`) | Free tier; strict JSON mode for match cards |
+| Maps | Leaflet + react-leaflet + OpenStreetMap/CARTO tiles | No API key, no billing, no vendor lock-in |
+| AI | Google Gemini (`gemini-3.6-flash`) | Free tier; strict JSON schema mode for match cards |
 | Hosting | Vercel | Zero-config Next.js deploys on every push |
 
 **Scope honesty — what is mocked in a 24-hour build:** authentication is a demo
 account switcher over seeded organisations (no passwords, clearly labelled in
 the UI). Payments, escrow, KYC verification, GST/e-way bill generation and SMS
 are clearly-labelled stub services, so the UI flow is complete end-to-end
-without pretending the integrations exist. Freight is the fully-built market;
-the other four are creatable and browsable through the same engine.
+without pretending the integrations exist. Everything else is real: the
+sealed-bid engine, the deal state machine, the corridor map and the AI
+byproduct matcher all run against live data, not fixtures. Freight is the
+market with the richest detail view (an embedded route map); the other four
+run through the identical engine with a different spec payload.
 
 ## Team Members
 
