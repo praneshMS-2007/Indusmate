@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { BadgeCheck, Star } from "lucide-react";
 
-import { getCurrentOrg, listDemoOrgs } from "@/lib/auth";
+import { getCurrentOrg, listDemoOrgs, toDemoOrgOption } from "@/lib/auth";
 import { AccountSwitcher } from "@/components/account-switcher";
 import { MainNav } from "@/components/main-nav";
 
@@ -41,7 +41,9 @@ export async function SiteHeader() {
               </span>
             </div>
 
-            <AccountSwitcher current={current} orgs={orgs} />
+            {/* Narrowed before it crosses into a client component. The full
+                row stays on the server. */}
+            <AccountSwitcher current={toDemoOrgOption(current)} orgs={orgs} />
           </div>
         </div>
 

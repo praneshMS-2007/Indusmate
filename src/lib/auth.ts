@@ -55,11 +55,70 @@ export async function getCurrentOrg(): Promise<Organisation> {
   return fallback;
 }
 
-/** Every organisation, for the account switcher. */
-export async function listDemoOrgs(): Promise<Organisation[]> {
+/**
+ * What the account switcher is allowed to know about an organisation.
+ *
+ * Deliberately NOT the Prisma row. The switcher is a client component, so
+ * whatever it receives is serialised into the HTML of every single page.
+ */
+export interface DemoOrgOption {
+  id: string;
+  name: string;
+  type: Organisation["type"];
+  city: string;
+  verified: boolean;
+  rating: number;
+  dealCount: number;
+  onTimePct: number;
+}
+
+/**
+ * Fields the switcher may receive.
+ *
+ * SECURITY — read before adding to this list.
+ *
+ * `pseudonymHandle` is absent on purpose, and it is the important omission.
+ * The switcher shows real organisation names. The bid inbox shows pseudonym
+ * handles. If a single payload ever carried BOTH, anyone could open view
+ * source and build the handle → real-name lookup table, and every masked bid
+ * on the platform would be trivially de-anonymised. The two identifiers must
+ * never travel together.
+ *
+ * legalName, contactName, contactPhone, contactEmail and gstin are absent for
+ * the plainer reason that a counterparty has no business holding them before
+ * a deal is accepted.
+ */
+const DEMO_ORG_FIELDS = {
+  id: true,
+  name: true,
+  type: true,
+  city: true,
+  verified: true,
+  rating: true,
+  dealCount: true,
+  onTimePct: true,
+} as const;
+
+/** Every organisation, for the account switcher. Public fields only. */
+export async function listDemoOrgs(): Promise<DemoOrgOption[]> {
   return prisma.organisation.findMany({
+    select: DEMO_ORG_FIELDS,
     orderBy: [{ type: "asc" }, { name: "asc" }],
   });
+}
+
+/** Narrow a full row down before handing it to a client component. */
+export function toDemoOrgOption(org: Organisation): DemoOrgOption {
+  return {
+    id: org.id,
+    name: org.name,
+    type: org.type,
+    city: org.city,
+    verified: org.verified,
+    rating: org.rating,
+    dealCount: org.dealCount,
+    onTimePct: org.onTimePct,
+  };
 }
 
 /**

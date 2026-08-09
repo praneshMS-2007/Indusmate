@@ -9,6 +9,8 @@
     "lint": "eslint",
     "seed": "prisma db seed",
     "db:verify": "tsx --env-file=.env prisma/verify.ts",
+    "check:contrast": "tsx scripts/check-contrast.ts",
+    "check:leaks": "tsx --env-file=.env scripts/check-leaks.ts",
     "db:reset": "prisma migrate reset --force"
   },
   "prisma": {

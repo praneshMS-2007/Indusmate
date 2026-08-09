@@ -2,8 +2,9 @@
 
 import { useTransition } from "react";
 import { BadgeCheck, ChevronDown, Loader2 } from "lucide-react";
-import type { Organisation, OrgType } from "@prisma/client";
+import type { OrgType } from "@prisma/client";
 
+import type { DemoOrgOption } from "@/lib/auth";
 import { switchDemoOrg } from "@/lib/auth-actions";
 import { ORG_TYPE_META } from "@/components/org-meta";
 import { Button } from "@/components/ui/button";
@@ -24,13 +25,18 @@ const TYPE_ORDER: OrgType[] = ["MANUFACTURER", "SUPPLIER", "TRANSPORTER", "RECYC
  * Labelled "Demo account" on purpose — judges should never wonder whether we
  * are claiming to have built real authentication. Switching writes a cookie
  * server-side and revalidates the whole tree.
+ *
+ * Takes DemoOrgOption, never the Prisma row. This is a client component, so
+ * every field it receives is serialised into the HTML of every page — and it
+ * must never carry `pseudonymHandle`, or the handle → real-name mapping ships
+ * to the browser and masked bidding is over. See DEMO_ORG_FIELDS in lib/auth.
  */
 export function AccountSwitcher({
   current,
   orgs,
 }: {
-  current: Organisation;
-  orgs: Organisation[];
+  current: DemoOrgOption;
+  orgs: DemoOrgOption[];
 }) {
   const [pending, startTransition] = useTransition();
 

@@ -4,127 +4,392 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ===========================================================================
+   INDUSTRIAL NEXUS — DESIGN TOKENS
+   ---------------------------------------------------------------------------
+   Reference is industrial signage and instrument panels, not consumer SaaS:
+   weighbridge readouts, hour meters, consignment notes, hazard placards.
+
+   Read on a mid-range Android in a plant yard — sometimes in direct sun,
+   sometimes in a badly lit shed. That drives three decisions:
+     · dark graphite base, because a white field in sunlight is a mirror
+     · high-contrast text only; nothing below WCAG AA (verified, see
+       `npm run check:contrast`)
+     · status is NEVER carried by colour alone — every state pairs its hue
+       with an icon and a word, because colour is the first thing a cheap
+       screen and a colour-blind user both lose.
+   =========================================================================== */
+
 @theme inline {
+  /* --- surfaces --- */
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-overlay: var(--surface-overlay);
+  --color-surface-sunken: var(--surface-sunken);
+
+  /* --- semantic roles --- */
+  --color-amber: var(--amber);
+  --color-amber-strong: var(--amber-strong);
+  --color-amber-muted: var(--amber-muted);
+  --color-on-amber: var(--on-amber);
+
+  --color-teal: var(--teal);
+  --color-teal-muted: var(--teal-muted);
+  --color-on-teal: var(--on-teal);
+
+  --color-masked: var(--masked);
+  --color-masked-muted: var(--masked-muted);
+  --color-on-masked: var(--on-masked);
+
+  --color-warning: var(--warning);
+  --color-warning-muted: var(--warning-muted);
+  --color-danger: var(--danger);
+  --color-danger-muted: var(--danger-muted);
+  --color-disabled-fg: var(--disabled-fg);
+  --color-disabled-bg: var(--disabled-bg);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+
+  --color-line: var(--border-default);
+  --color-line-subtle: var(--border-subtle);
+  --color-line-strong: var(--border-strong);
+
+  /* --- shadcn contract (kept so base components keep working) --- */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* --- type ---
+     Display  Barlow Condensed — signage. Uppercase, tight, titles only.
+     Body     Inter            — everything readable.
+     Data     IBM Plex Mono    — every number. Never prose. */
+  --font-display: var(--font-barlow), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  /* --- radius: small. Machined edges, not pillows. --- */
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-xl: 6px;
+  --radius-2xl: 8px;
+  --radius-3xl: 10px;
+  --radius-4xl: 12px;
+
+  /* --- elevation: cast shadow only, no glow. Panels sit ON the chassis. --- */
+  --shadow-e1: 0 1px 2px rgb(0 0 0 / 0.5);
+  --shadow-e2: 0 2px 6px rgb(0 0 0 / 0.55), 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-e3: 0 8px 24px rgb(0 0 0 / 0.6), 0 2px 6px rgb(0 0 0 / 0.45);
 }
 
-:root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
-
+:root,
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* =========================================================================
+     SURFACES — graphite. Cool and slightly desaturated, like cast iron.
+     Four depths only; more than that and a small screen reads as mush.
+     ========================================================================= */
+  --surface: #0d1012; /* app chassis          */
+  --surface-raised: #151a1d; /* cards, panels        */
+  --surface-overlay: #1e2529; /* dialogs, dropdowns   */
+  --surface-sunken: #080a0b; /* wells, code, inputs  */
+
+  /* =========================================================================
+     TEXT — three weights of emphasis, all AA or better on every surface.
+     ========================================================================= */
+  --text-primary: #f1f5f6;
+  --text-secondary: #a9b4b9;
+  --text-tertiary: #8a969c;
+
+  /* =========================================================================
+     LINES — a panel edge, not a decoration.
+
+     Two different jobs, and WCAG treats them differently:
+       subtle/default  dividers and card edges. Decorative: the card is also
+                       identified by its fill, so 1.4.11 does not apply. Kept
+                       visible enough to read on a cheap panel regardless.
+       strong          the boundary of an interactive control — input, select,
+                       outline button. This one IS the component's identity,
+                       so it must clear 3:1 on every surface. It does.
+     ========================================================================= */
+  --border-subtle: #242b30;
+  --border-default: #3a464c;
+  --border-strong: #6e7a80;
+
+  /* =========================================================================
+     AMBER — primary action, active state.
+     Safety amber: the colour of a plant's caution beacon and every "this is
+     the control you operate" marking on a machine. It is the only colour
+     allowed on a primary button, so the eye always knows where the action is.
+     ========================================================================= */
+  --amber: #f5a524;
+  --amber-strong: #ffb84d; /* hover — brighter, not darker: the panel is dark */
+  --amber-muted: #4a3413; /* tinted fill for active nav, selected chips      */
+  --on-amber: #140f04; /* near-black. Text on amber is always dark.       */
+
+  /* =========================================================================
+     TEAL — verified, settled, circular economy.
+     Deliberately not green: green reads "go" on a control panel, and this is
+     a state ("this completed / this is certified"), not an instruction.
+     ========================================================================= */
+  --teal: #2dd4bf;
+  --teal-muted: #0f3f39;
+  --on-teal: #04201c;
+
+  /* =========================================================================
+     MASKED — sealed / withheld identity. THE SIGNATURE STATE.
+     Violet appears nowhere else in the system, so it can never be confused
+     with action (amber), success (teal), or fault (red). On a projector it
+     separates cleanly from all three. Always used behind a hatch pattern and
+     the word "Sealed" — never as a bare colour.
+     ========================================================================= */
+  --masked: #b494ff;
+  --masked-muted: #2b2245;
+  --masked-hatch-a: #241d3a; /* the two tones of the redaction hatching */
+  --masked-hatch-b: #392e5c;
+  --on-masked: #0f0a1c;
+
+  /* =========================================================================
+     FAULT STATES
+     ========================================================================= */
+  --warning: #ffa23e; /* orange — separated from amber by hue AND icon */
+  --warning-muted: #4a2f10;
+  --danger: #ff7a7a;
+  --danger-muted: #4d1f1f;
+
+  /* Disabled still clears AA. A control you cannot press should look inert,
+     not become unreadable — operators need to know what the button says in
+     order to work out why it is off. */
+  --disabled-fg: #8a969c;
+  --disabled-bg: #171d20;
+
+  /* =========================================================================
+     SHADCN CONTRACT — base components map onto the tokens above.
+     ========================================================================= */
+  --background: var(--surface);
+  --foreground: var(--text-primary);
+  --card: var(--surface-raised);
+  --card-foreground: var(--text-primary);
+  --popover: var(--surface-overlay);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--amber);
+  --primary-foreground: var(--on-amber);
+  --secondary: #232a2e;
+  --secondary-foreground: var(--text-primary);
+  --muted: #1a2124;
+  --muted-foreground: var(--text-secondary);
+  --accent: #232a2e;
+  --accent-foreground: var(--text-primary);
+  --destructive: var(--danger);
+  --border: var(--border-default);
+  /* Interactive controls get the compliant boundary, not the decorative one. */
+  --input: var(--border-strong);
+  --ring: var(--amber);
+  --radius: 4px;
+
+  --chart-1: var(--amber);
+  --chart-2: var(--teal);
+  --chart-3: var(--masked);
+  --chart-4: var(--warning);
+  --chart-5: #6ea8fe;
+
+  --sidebar: var(--surface-raised);
+  --sidebar-foreground: var(--text-primary);
+  --sidebar-primary: var(--amber);
+  --sidebar-primary-foreground: var(--on-amber);
+  --sidebar-accent: #232a2e;
+  --sidebar-accent-foreground: var(--text-primary);
+  --sidebar-border: var(--border-subtle);
+  --sidebar-ring: var(--amber);
+
+  /* Minimum touch target. Thumbs in work gloves. */
+  --touch-min: 44px;
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
+
   html {
     @apply font-sans;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    /* Slightly open tracking survives a cheap panel better than tight. */
+    letter-spacing: 0.006em;
+  }
+
+  /* One focus treatment everywhere: a solid amber ring with a dark gap so it
+     reads against both the chassis and a raised card. Never removed —
+     keyboard operation is how this gets used on a laptop at a judging table. */
+  :focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* Numbers are instruments. Tabular figures so a column of bid amounts
+     lines up digit-for-digit, the way a weighbridge ticket does. */
+  .font-mono,
+  [class*="font-mono"] {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+}
+
+@layer components {
+  /* -------------------------------------------------------------------------
+     DISPLAY TYPE — signage. Uppercase, condensed, tightly tracked.
+     Restraint is the point: page titles and section headers only. Applied to
+     body copy it stops being signage and starts being shouting.
+     ------------------------------------------------------------------------- */
+  .type-display {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-weight: 600;
+    line-height: 1.05;
+  }
+
+  .type-eyebrow {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    font-weight: 600;
+    font-size: 0.6875rem;
+    line-height: 1;
+    color: var(--text-tertiary);
+  }
+
+  /* -------------------------------------------------------------------------
+     DATA TYPE — every number on the platform.
+     ------------------------------------------------------------------------- */
+  .type-data {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+
+  /* -------------------------------------------------------------------------
+     THE REDACTION HATCH — the signature element.
+     A sealed bid is a sealed tender envelope. Where the organisation's name
+     would be, there is a physically obscured panel: diagonal hatching in the
+     masked violet, the same visual language as barricade tape across a door.
+     The reputation figures sit beside it in mono, fully legible.
+     The reading is "deliberately withheld", never "failed to load".
+     ------------------------------------------------------------------------- */
+  .redaction {
+    background-color: var(--masked-hatch-a);
+    background-image: repeating-linear-gradient(
+      135deg,
+      var(--masked-hatch-a) 0px,
+      var(--masked-hatch-a) 4px,
+      var(--masked-hatch-b) 4px,
+      var(--masked-hatch-b) 9px
+    );
+    border: 1px solid color-mix(in srgb, var(--masked) 35%, transparent);
+    border-radius: 2px;
+  }
+
+  /* -------------------------------------------------------------------------
+     THE REVEAL — plays once, when a deal reaches ACCEPTED.
+     The redaction wipes off to the right and the real name lands underneath.
+     360ms total. This is the moment the demo turns on, so it has to read from
+     the back of a room: a wipe, not a fade, because a wipe survives projector
+     gamma and a fade does not.
+     ------------------------------------------------------------------------- */
+  .reveal-panel {
+    animation: reveal-wipe 320ms cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  }
+
+  .reveal-name {
+    animation: reveal-land 360ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes reveal-wipe {
+    from {
+      clip-path: inset(0 0 0 0);
+      opacity: 1;
+    }
+    to {
+      clip-path: inset(0 0 0 100%);
+      opacity: 0;
+    }
+  }
+
+  @keyframes reveal-land {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* Minimum 44px hit area without forcing 44px of visible box. */
+  .touch-target {
+    position: relative;
+  }
+  .touch-target::after {
+    content: "";
+    position: absolute;
+    inset: 50% 0 0 50%;
+    width: max(100%, var(--touch-min));
+    height: max(100%, var(--touch-min));
+    translate: -50% -50%;
+  }
+}
+
+/* Vestibular safety. Anyone who has asked their OS to stop moving things gets
+   the end state immediately — the reveal still happens, it just does not
+   travel. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal-panel {
+    animation: none;
+    opacity: 0;
+    clip-path: inset(0 0 0 100%);
+  }
+  .reveal-name {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
 }
