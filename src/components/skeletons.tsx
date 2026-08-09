@@ -53,6 +53,16 @@ export function ListSkeleton({ count = 3 }: { count?: number }) {
   );
 }
 
+export function MapSkeleton() {
+  return (
+    <div
+      className="h-[60vh] min-h-[420px] w-full animate-pulse rounded-md border border-line bg-surface-raised"
+      aria-busy
+      aria-label="Loading map"
+    />
+  );
+}
+
 export function PageHeaderSkeleton() {
   return (
     <div className="flex flex-col gap-2">
