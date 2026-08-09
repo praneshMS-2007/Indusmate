@@ -1,5 +1,5 @@
 /**
- * Seed data for Industrial Nexus.
+ * Seed data for IndusMate.
  *
  * Goals, in priority order:
  *  1. Every lifecycle state that a Deal row can occupy has one sitting in it,
@@ -928,7 +928,7 @@ const DEALS = [
       "Bid submitted at ₹44,000",
       "Owner countered at ₹41,200",
       "Bidder accepted the counter — identities revealed",
-      "Contract generated (stub e-way bill NX-EWB-88214)",
+      "Contract generated (stub e-way bill IM-EWB-88214)",
       "Vehicle loaded and departed Pithampur",
       "Delivered and POD uploaded; payment released from escrow (stub)",
       "Both parties rated",
@@ -950,7 +950,7 @@ const DEALS = [
     notes: [
       "Bid submitted at ₹4,100/t",
       "Seller accepted — identities revealed",
-      "Supply contract issued (stub GST invoice NX-INV-40912)",
+      "Supply contract issued (stub GST invoice IM-INV-40912)",
     ],
     ageHours: 52,
   },

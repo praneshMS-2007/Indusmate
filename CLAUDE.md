@@ -1,4 +1,4 @@
-# Industrial Nexus
+# IndusMate
 
 **Read `README.md` first — it is the project brief and it governs every decision
 in this repo.**

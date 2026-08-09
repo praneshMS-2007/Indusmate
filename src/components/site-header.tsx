@@ -15,12 +15,12 @@ export async function SiteHeader() {
           <Link href="/" className="flex shrink-0 items-center gap-2">
             <span
               aria-hidden
-              className="grid size-7 place-items-center rounded bg-amber-500 text-xs font-bold text-black"
+              className="type-display grid size-7 place-items-center rounded-sm bg-amber text-xs text-on-amber"
             >
-              NX
+              IM
             </span>
-            <span className="hidden text-sm font-semibold tracking-tight sm:inline">
-              Industrial Nexus
+            <span className="type-display hidden text-base tracking-tight sm:inline">
+              IndusMate
             </span>
           </Link>
 

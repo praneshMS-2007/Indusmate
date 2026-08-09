@@ -6,7 +6,7 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
- * Industrial Nexus button.
+ * IndusMate button.
  *
  * Sized for a thumb in a work glove, not a mouse pointer: the default is 44px
  * tall, which is the platform minimum touch target. shadcn ships 32px, which

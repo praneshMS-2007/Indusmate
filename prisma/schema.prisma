@@ -1,4 +1,4 @@
-// Industrial Nexus — database schema
+// IndusMate — database schema
 //
 // THE CENTRAL IDEA: there is ONE `Listing` table. A raw material lot, a waste
 // stream, an idle machine-hour, a technician's shift and a truck's return leg

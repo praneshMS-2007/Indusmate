@@ -46,7 +46,7 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Industrial Nexus",
+  title: "IndusMate",
   description:
     "One negotiation engine. Five industrial markets. Sealed, anonymous bidding for Indian industry.",
 };

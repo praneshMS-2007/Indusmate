@@ -69,7 +69,7 @@ export default function StyleguidePage() {
   return (
     <main className="flex flex-col gap-12 pb-16">
       <header className="flex flex-col gap-2 border-b border-line pb-6">
-        <p className="type-eyebrow">Industrial Nexus</p>
+        <p className="type-eyebrow">IndusMate</p>
         <h1 className="type-display text-3xl sm:text-4xl">Design system</h1>
         <p className="max-w-prose text-sm text-text-secondary">
           Instrument-panel software for Indian heavy industry. Read on a mid-range Android in a
@@ -288,7 +288,7 @@ export default function StyleguidePage() {
             <div className="type-data flex flex-col gap-1 text-sm">
               <span>₹54,800 &nbsp; ₹58,500 &nbsp; ₹61,000</span>
               <span>12.0 t · 486 km · 34 cbm</span>
-              <span>NX-EWB-88214 · 23.0993, 77.5205</span>
+              <span>IM-EWB-88214 · 23.0993, 77.5205</span>
               <span>4.9/5 · 241 deals · 98% on-time</span>
             </div>
           </TypeSpec>

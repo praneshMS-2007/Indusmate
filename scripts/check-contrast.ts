@@ -102,7 +102,7 @@ function row(label: string, r: number, threshold: number) {
   );
 }
 
-console.log("\nWCAG AA contrast — Industrial Nexus tokens");
+console.log("\nWCAG AA contrast — IndusMate tokens");
 console.log("═".repeat(78));
 
 for (const surface of SURFACES) {

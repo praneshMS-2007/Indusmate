@@ -1,4 +1,4 @@
-# Industrial Nexus
+# IndusMate
 
 > One negotiation engine. Five industrial markets. Adding a sixth is
 > configuration, not code.
@@ -7,7 +7,7 @@
 
 | | |
 |---|---|
-| **Project Title** | Industrial Nexus |
+| **Project Title** | IndusMate |
 | **Team Name** | **COLDSTACK** |
 | **Live Demo** | _Deployment pending — link goes here_ |
 | **Repository** | https://github.com/praneshMS-2007/Indusmate |
@@ -39,7 +39,7 @@ them cover all five, and why adding a market is a rewrite.
 
 ## Solution Overview
 
-Industrial Nexus treats negotiation as the architecture rather than a feature.
+IndusMate treats negotiation as the architecture rather than a feature.
 
 **The insight:** a raw material lot, a waste stream, an idle machine-hour, a
 technician's shift and a truck's return leg are all the same abstract object —
