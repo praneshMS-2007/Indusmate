@@ -7,6 +7,8 @@ import { DEAL_STATE_LABEL } from "@/lib/deals";
 import { getCurrentOrg } from "@/lib/auth";
 import { getListingBidView } from "@/lib/bid-queries";
 import { BidPanel } from "@/components/bid-panel";
+import { SymbiosisMatcher } from "@/components/symbiosis-matcher";
+import { RouteMap } from "@/components/map/route-map";
 import { LISTING_TYPE_META, specSummary, type ListingType } from "@/lib/listing-spec";
 import { formatWindow, rupees, timeRemaining } from "@/lib/format";
 import { ORG_TYPE_META } from "@/components/org-meta";
@@ -97,6 +99,22 @@ export default async function ListingDetailPage({
             between this and a freight leg.
           </p>
         </section>
+
+        {listing.type === "FREIGHT" &&
+          listing.destLat !== null &&
+          listing.destLng !== null && (
+            <section className="flex flex-col gap-3">
+              <h2 className="text-sm font-medium">Route</h2>
+              <RouteMap
+                origin={[listing.locationLat, listing.locationLng]}
+                originLabel={listing.locationCity}
+                destination={[listing.destLat, listing.destLng]}
+                destinationLabel={listing.destCity ?? "Destination"}
+              />
+            </section>
+          )}
+
+        {listing.type === "BYPRODUCT" && <SymbiosisMatcher listingId={listing.id} />}
       </div>
 
       {/* ---- Sidebar ------------------------------------------------- */}
