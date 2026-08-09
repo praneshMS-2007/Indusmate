@@ -1,8 +1,12 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { BadgeCheck, Clock, Gavel, MapPin, Star, TrendingDown, TrendingUp } from "lucide-react";
+import { BadgeCheck, Clock, Handshake, MapPin, Star, TrendingDown, TrendingUp } from "lucide-react";
 
-import { prisma } from "@/lib/prisma";
+import { DEAL_STATE_LABEL } from "@/lib/deals";
+
 import { getCurrentOrg } from "@/lib/auth";
+import { getListingBidView } from "@/lib/bid-queries";
+import { BidPanel } from "@/components/bid-panel";
 import { LISTING_TYPE_META, specSummary, type ListingType } from "@/lib/listing-spec";
 import { formatWindow, rupees, timeRemaining } from "@/lib/format";
 import { ORG_TYPE_META } from "@/components/org-meta";
@@ -15,15 +19,13 @@ export default async function ListingDetailPage({
 }) {
   const { id } = await params;
 
-  const [listing, viewer] = await Promise.all([
-    prisma.listing.findUnique({
-      where: { id },
-      include: { ownerOrg: true, _count: { select: { bids: true } } },
-    }),
-    getCurrentOrg(),
-  ]);
+  const viewer = await getCurrentOrg();
+  // Bid data only ever arrives through this helper, which masks. The page has
+  // no access to an unmasked bid to accidentally render.
+  const view = await getListingBidView(id, viewer.id);
+  if (!view) notFound();
 
-  if (!listing) notFound();
+  const { listing } = view;
 
   const meta = LISTING_TYPE_META[listing.type as ListingType];
   const reverse = listing.direction === "REVERSE";
@@ -126,21 +128,39 @@ export default async function ListingDetailPage({
           </p>
         </section>
 
-        <section className="rounded-lg border border-border/60 bg-card p-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xs tracking-wide text-muted-foreground uppercase">Bidding</h2>
-            <span className="text-xs text-amber-400">{timeRemaining(listing.closesAt)}</span>
+        <section className="rounded-md border border-line bg-surface-raised p-4">
+          <div className="mb-3 flex items-center justify-between border-b border-line-subtle pb-3">
+            <span className="type-eyebrow">Bidding</span>
+            <span className="type-data text-xs text-amber">{timeRemaining(listing.closesAt)}</span>
           </div>
-          <p className="mt-2 flex items-center gap-1.5 text-sm">
-            <Gavel className="size-4 text-muted-foreground" />
-            {listing._count.bids} sealed {listing._count.bids === 1 ? "bid" : "bids"}
-          </p>
 
-          {/* Block 4 replaces this with the bid panel and the masked inbox. */}
-          <div className="mt-3 rounded-md border border-dashed border-border/60 p-3 text-xs text-muted-foreground">
-            The bid panel lands in Block 4 — sealed submission, masked inbox, counter-offers and the
-            identity reveal on acceptance.
-          </div>
+          <BidPanel
+            listingId={listing.id}
+            direction={listing.direction as "REVERSE" | "FORWARD"}
+            isOwner={view.isOwner}
+            bids={view.bids}
+            ownBid={view.ownBid}
+            totalBids={view.totalBids}
+            dealState={view.deal?.state ?? null}
+            dealId={view.deal?.id ?? null}
+            referencePrice={listing.referencePrice}
+            unit={listing.unit}
+            closed={new Date(listing.closesAt).getTime() <= Date.now()}
+            awarded={listing.status === "AWARDED"}
+          />
+
+          {view.deal && (
+            <Link
+              href="/deals"
+              className="mt-4 flex items-center justify-between gap-2 rounded-md border border-teal/40 bg-teal-muted/40 px-3 py-2 text-sm"
+            >
+              <span className="flex items-center gap-2">
+                <Handshake className="size-4 text-teal" />
+                Deal {DEAL_STATE_LABEL[view.deal.state].toLowerCase()}
+              </span>
+              <span className="type-data text-teal">{rupees(view.deal.price)}</span>
+            </Link>
+          )}
         </section>
       </aside>
     </main>

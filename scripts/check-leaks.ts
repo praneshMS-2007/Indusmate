@@ -28,6 +28,22 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 const BASE = process.env.SCAN_BASE ?? "http://localhost:3000";
 
+/** The organisation the scan browses as. */
+const VIEWER = process.env.SCAN_AS ?? "org_chambal_steel";
+
+/**
+ * Pages where a counterparty's identity is legitimately visible, because the
+ * viewer has an accepted deal with them.
+ *
+ * Note what this does NOT do: it does not blanket-allow those pages. The
+ * entitled set is computed from the database — counterparties on THIS viewer's
+ * deals that have actually reached a reveal state — so an identity belonging
+ * to anyone else still fails, even on /deals. Silencing the page wholesale
+ * would have removed the check from the one screen where reveal happens, which
+ * is precisely where a mistake would matter most.
+ */
+const REVEAL_PAGES = new Set(["/deals"]);
+
 /** Pages that must never expose identity. Extend as screens are added. */
 const PAGES = [
   "/",
@@ -91,17 +107,50 @@ function withinProximity(body: string, a: string, b: string, limit: number): num
   return best <= limit ? best : null;
 }
 
+/**
+ * Identities this viewer has earned the right to see: counterparties on deals
+ * they are party to, where the deal has actually reached a reveal state.
+ */
+async function entitledIdentities(viewerOrgId: string): Promise<Set<string>> {
+  const deals = await prisma.deal.findMany({
+    where: {
+      OR: [{ buyerOrgId: viewerOrgId }, { sellerOrgId: viewerOrgId }],
+      state: { in: ["ACCEPTED", "CONTRACTED", "IN_EXECUTION", "SETTLED", "RATED", "CANCELLED"] },
+    },
+    include: { buyerOrg: true, sellerOrg: true },
+  });
+
+  const allowed = new Set<string>();
+  for (const d of deals) {
+    const other = d.buyerOrgId === viewerOrgId ? d.sellerOrg : d.buyerOrg;
+    for (const v of [
+      other.legalName,
+      other.contactName,
+      other.contactPhone,
+      other.contactEmail,
+      other.gstin,
+    ]) {
+      allowed.add(v);
+    }
+  }
+  return allowed;
+}
+
 async function main() {
   const orgs = await prisma.organisation.findMany();
+  const entitled = SELFTEST ? new Set<string>() : await entitledIdentities(VIEWER);
   let failures = 0;
 
   console.log(`\nIdentity leak scan — ${BASE}`);
+  console.log(`browsing as ${VIEWER}; ${entitled.size} identity strings legitimately revealed`);
   console.log("═".repeat(78));
 
   for (const path of PAGES) {
-    const res = await fetch(BASE + path);
+    const res = await fetch(BASE + path, { headers: { Cookie: `nx_demo_org=${VIEWER}` } });
     const body = await res.text();
-    const allowed = SELFTEST ? [] : (EXPECTED[path] ?? []);
+    const allowed = SELFTEST
+      ? []
+      : [...(EXPECTED[path] ?? []), ...(REVEAL_PAGES.has(path) ? [...entitled] : [])];
     const hits: string[] = [];
 
     for (const org of orgs) {
