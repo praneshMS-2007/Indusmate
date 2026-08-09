@@ -15,12 +15,45 @@ import { join } from "node:path";
 const CSS = readFileSync(join(process.cwd(), "src/app/globals.css"), "utf8");
 
 // ---------------------------------------------------------------------------
+// Theme extraction
+// ---------------------------------------------------------------------------
+
+/**
+ * Two themes now share this file — `:root` (light, default) and `.dark`
+ * (field theme) — each defining the full token set with different hex
+ * values. A single whole-file regex would silently only ever find the
+ * first match (light) and never check dark again, which is exactly the
+ * kind of drifted check that reports pass while the app fails. So each
+ * theme's block is isolated first, and every pairing below runs against
+ * both in turn.
+ */
+function extractBlock(css: string, selector: string): string {
+  const start = css.indexOf(`${selector} {`);
+  if (start === -1) throw new Error(`Could not find "${selector} {" block in globals.css`);
+  const openBrace = css.indexOf("{", start);
+  let depth = 0;
+  for (let i = openBrace; i < css.length; i++) {
+    if (css[i] === "{") depth++;
+    else if (css[i] === "}") {
+      depth--;
+      if (depth === 0) return css.slice(openBrace + 1, i);
+    }
+  }
+  throw new Error(`Unterminated "${selector}" block in globals.css`);
+}
+
+const THEMES = {
+  light: extractBlock(CSS, ":root"),
+  dark: extractBlock(CSS, ".dark"),
+} as const;
+
+// ---------------------------------------------------------------------------
 // Colour maths
 // ---------------------------------------------------------------------------
 
-function readToken(name: string): string {
-  const m = CSS.match(new RegExp(`--${name}:\\s*(#[0-9a-fA-F]{3,8})`));
-  if (!m) throw new Error(`Token --${name} not found (or is not a hex value)`);
+function readToken(block: string, name: string): string {
+  const m = block.match(new RegExp(`--${name}:\\s*(#[0-9a-fA-F]{3,8})`));
+  if (!m) throw new Error(`Token --${name} not found (or is not a hex value) in this theme block`);
   return m[1];
 }
 
@@ -103,26 +136,31 @@ function row(label: string, r: number, threshold: number) {
 }
 
 console.log("\nWCAG AA contrast — IndusMate tokens");
-console.log("═".repeat(78));
 
-for (const surface of SURFACES) {
-  const bg = readToken(surface);
-  console.log(`\nOn --${surface}  ${bg}`);
-  for (const role of TEXT_ROLES) {
-    row(`${role}`, ratio(readToken(role), bg), AA_TEXT);
-  }
-  for (const role of INTERACTIVE_BOUNDARIES) {
-    row(`${role} (control boundary)`, ratio(readToken(role), bg), AA_UI);
-  }
-  for (const role of DECORATIVE) {
-    const r = ratio(readToken(role), bg);
-    console.log(`  ${`${role} (decorative)`.padEnd(42)} ${r.toFixed(2).padStart(6)}:1   n/a   1.4.11 out of scope`);
-  }
-}
+for (const [themeName, block] of Object.entries(THEMES)) {
+  console.log("\n" + "═".repeat(78));
+  console.log(`THEME: ${themeName.toUpperCase()}`);
+  console.log("═".repeat(78));
 
-console.log(`\nText on filled controls`);
-for (const [fg, bg] of ON_FILL) {
-  row(`${fg} on ${bg}`, ratio(readToken(fg), readToken(bg)), AA_TEXT);
+  for (const surface of SURFACES) {
+    const bg = readToken(block, surface);
+    console.log(`\nOn --${surface}  ${bg}`);
+    for (const role of TEXT_ROLES) {
+      row(`${role}`, ratio(readToken(block, role), bg), AA_TEXT);
+    }
+    for (const role of INTERACTIVE_BOUNDARIES) {
+      row(`${role} (control boundary)`, ratio(readToken(block, role), bg), AA_UI);
+    }
+    for (const role of DECORATIVE) {
+      const r = ratio(readToken(block, role), bg);
+      console.log(`  ${`${role} (decorative)`.padEnd(42)} ${r.toFixed(2).padStart(6)}:1   n/a   1.4.11 out of scope`);
+    }
+  }
+
+  console.log(`\nText on filled controls`);
+  for (const [fg, bg] of ON_FILL) {
+    row(`${fg} on ${bg}`, ratio(readToken(block, fg), readToken(block, bg)), AA_TEXT);
+  }
 }
 
 console.log("\n" + "═".repeat(78));

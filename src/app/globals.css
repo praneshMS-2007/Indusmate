@@ -101,13 +101,128 @@
   --radius-3xl: 10px;
   --radius-4xl: 12px;
 
-  /* --- elevation: cast shadow only, no glow. Panels sit ON the chassis. --- */
-  --shadow-e1: 0 1px 2px rgb(0 0 0 / 0.5);
-  --shadow-e2: 0 2px 6px rgb(0 0 0 / 0.55), 0 1px 2px rgb(0 0 0 / 0.4);
-  --shadow-e3: 0 8px 24px rgb(0 0 0 / 0.6), 0 2px 6px rgb(0 0 0 / 0.45);
+  /* --- elevation: indirection onto --elevation-e*, which differ per theme
+     below. A floating card in light mode is a soft shadow with a hint of
+     blue at the edge; in dark mode it is a harder cast shadow with a hint of
+     amber. Same three depths, two different physical recipes. --- */
+  --shadow-e1: var(--elevation-e1);
+  --shadow-e2: var(--elevation-e2);
+  --shadow-e3: var(--elevation-e3);
 }
 
-:root,
+/* =============================================================================
+   LIGHT — the default theme.
+
+   Judges review this on a laptop indoors, not a plant yard, so the original
+   "dark only, sunlight is a mirror" argument does not apply to this audience.
+   Kept as navy ink on white-to-pale-blue rather than a generic light grey:
+   the blue is IndusMate's, not a neutral SaaS default.
+
+   Every bright dark-mode accent (amber, teal, masked violet, warning,
+   danger) is meaningfully DARKER here. That is not a downgrade — a colour
+   bright enough to read as text on near-black graphite is, by definition,
+   too light to read as text on white. Each one is re-verified at 4.5:1 by
+   `npm run check:contrast`, which checks this block independently of .dark.
+   ============================================================================= */
+:root {
+  /* --- surfaces: white cards float on a pale blue-grey chassis --- */
+  --surface: #eef2fa; /* app chassis                */
+  --surface-raised: #ffffff; /* cards, panels — the floor    */
+  --surface-overlay: #ffffff; /* dialogs, dropdowns           */
+  --surface-sunken: #e4eaf5; /* wells, code, inputs          */
+
+  /* --- text: navy ink, not black --- */
+  --text-primary: #0f1b2e;
+  --text-secondary: #45566d;
+  --text-tertiary: #566a82;
+
+  /* --- lines --- */
+  --border-subtle: #e3e9f3;
+  --border-default: #d2dae8;
+  --border-strong: #64748b;
+
+  /* --- amber: primary action. Darkened from the brand's bright safety
+     amber so it stays readable as TEXT on white (5.6:1) — the vivid
+     #f5a524 drops to ~2.1:1 on white, which fails outright. --- */
+  --amber: #8a4e06;
+  --amber-strong: #6b3c05; /* hover — darker, light-mode convention  */
+  --amber-muted: #fcefda; /* tinted fill for active nav, chips       */
+  --on-amber: #fffaf1; /* warm near-white text on filled amber    */
+
+  /* --- teal: verified, settled --- */
+  --teal: #0c655e;
+  --teal-muted: #e3f5f2;
+  --on-teal: #ecfdf9;
+
+  /* --- masked: sealed / withheld identity, THE SIGNATURE STATE --- */
+  --masked: #6d28d9;
+  --masked-muted: #f1eaff;
+  --masked-hatch-a: #f1eaff;
+  --masked-hatch-b: #ded0ff;
+  --on-masked: #f8f4ff;
+
+  /* --- fault states --- */
+  --warning: #a8380a;
+  --warning-muted: #fdece2;
+  --danger: #b91c1c;
+  --danger-muted: #fbe6e6;
+
+  --disabled-fg: #4d5e73;
+  --disabled-bg: #eef2f8;
+
+  /* --- elevation: soft shadow, faint blue glow at the edge --- */
+  --elevation-e1: 0 1px 2px rgb(15 23 42 / 0.06), 0 1px 1px rgb(15 23 42 / 0.04);
+  --elevation-e2: 0 0 0 1px rgb(37 99 235 / 0.06), 0 4px 14px rgb(15 23 42 / 0.08),
+    0 2px 4px rgb(15 23 42 / 0.05);
+  --elevation-e3: 0 0 0 1px rgb(37 99 235 / 0.1), 0 18px 38px rgb(15 23 42 / 0.13),
+    0 4px 10px rgb(15 23 42 / 0.06);
+
+  /* --- shadcn contract --- */
+  --background: var(--surface);
+  --foreground: var(--text-primary);
+  --card: var(--surface-raised);
+  --card-foreground: var(--text-primary);
+  --popover: var(--surface-overlay);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--amber);
+  --primary-foreground: var(--on-amber);
+  --secondary: #eaf0f9;
+  --secondary-foreground: var(--text-primary);
+  --muted: #eaf0f9;
+  --muted-foreground: var(--text-secondary);
+  --accent: #e3eaf6;
+  --accent-foreground: var(--text-primary);
+  --destructive: var(--danger);
+  --border: var(--border-default);
+  --input: var(--border-strong);
+  --ring: var(--amber);
+  --radius: 4px;
+
+  --chart-1: var(--amber);
+  --chart-2: var(--teal);
+  --chart-3: var(--masked);
+  --chart-4: var(--warning);
+  --chart-5: #2563eb;
+
+  --sidebar: var(--surface-raised);
+  --sidebar-foreground: var(--text-primary);
+  --sidebar-primary: var(--amber);
+  --sidebar-primary-foreground: var(--on-amber);
+  --sidebar-accent: #eaf0f9;
+  --sidebar-accent-foreground: var(--text-primary);
+  --sidebar-border: var(--border-subtle);
+  --sidebar-ring: var(--amber);
+
+  /* Minimum touch target. Thumbs in work gloves. */
+  --touch-min: 44px;
+}
+
+/* =============================================================================
+   DARK — the field theme. Unchanged from the original graphite palette;
+   this is what a plant yard in direct sun still needs. Toggled explicitly,
+   never assumed from OS preference (see ThemeProvider: enableSystem={false})
+   so a judge's laptop always opens on the same screen this was designed for.
+   ============================================================================= */
 .dark {
   /* =========================================================================
      SURFACES — graphite. Cool and slightly desaturated, like cast iron.
@@ -186,6 +301,14 @@
      order to work out why it is off. */
   --disabled-fg: #8a969c;
   --disabled-bg: #171d20;
+
+  /* --- elevation: harder cast shadow, faint amber glow at the edge — the
+     brand accent doing double duty as the "this is a raised panel" cue. --- */
+  --elevation-e1: 0 1px 2px rgb(0 0 0 / 0.5);
+  --elevation-e2: 0 0 0 1px rgb(245 165 36 / 0.05), 0 2px 6px rgb(0 0 0 / 0.55),
+    0 1px 2px rgb(0 0 0 / 0.4);
+  --elevation-e3: 0 0 0 1px rgb(245 165 36 / 0.09), 0 10px 28px rgb(0 0 0 / 0.62),
+    0 3px 8px rgb(0 0 0 / 0.48);
 
   /* =========================================================================
      SHADCN CONTRACT — base components map onto the tokens above.
@@ -295,6 +418,58 @@
     font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
     letter-spacing: -0.01em;
+  }
+
+  /* -------------------------------------------------------------------------
+     ELEVATION — the floating feel.
+     A card does not just sit on the chassis, it hovers a couple of
+     millimetres above it and settles slightly closer on hover. The shadow
+     values themselves differ by theme (see --elevation-e* above) — light
+     mode gets a soft shadow with a hint of blue at the edge, dark mode a
+     harder cast shadow with a hint of amber — so this class only supplies
+     the depth step and the motion, never a literal colour.
+     ------------------------------------------------------------------------- */
+  .elevated {
+    box-shadow: var(--shadow-e2);
+    transition:
+      transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 180ms ease,
+      border-color 180ms ease;
+  }
+  .elevated:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-e3);
+  }
+  /* A card resting inside another elevated card — no second hover lift, or
+     nested surfaces fight each other for the same couple of pixels. */
+  .elevated-flat {
+    box-shadow: var(--shadow-e1);
+  }
+
+  /* -------------------------------------------------------------------------
+     LEAFLET POPUPS — Leaflet's own stylesheet hardcodes a white wrapper and
+     near-black text (see leaflet/dist/leaflet.css), which the popup content
+     in listings-map-inner.tsx never accounted for. Overriding onto our own
+     tokens makes it theme-aware for free — light and dark both correct, and
+     no per-theme branching needed inside the popup markup itself.
+     ------------------------------------------------------------------------- */
+  .leaflet-popup-content-wrapper {
+    background: var(--surface-raised);
+    color: var(--text-primary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-e2);
+  }
+  .leaflet-popup-tip {
+    background: var(--surface-raised);
+    border: 1px solid var(--border-default);
+    box-shadow: none;
+  }
+  .leaflet-popup-close-button {
+    color: var(--text-tertiary) !important;
+  }
+  .leaflet-popup-close-button:hover {
+    color: var(--text-primary) !important;
   }
 
   /* -------------------------------------------------------------------------

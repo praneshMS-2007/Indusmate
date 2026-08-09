@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { Barlow_Condensed, IBM_Plex_Mono, Inter } from "next/font/google";
 import "./globals.css";
 
+import { AppSidebar } from "@/components/app-sidebar";
+import { BottomTabBar } from "@/components/bottom-tab-bar";
 import { SiteHeader } from "@/components/site-header";
+import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 
 /**
@@ -53,16 +56,29 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    // Dark is the only theme. This is shop-floor software read on a projector
-    // and in a plant yard — a white field in sunlight is a mirror.
+    // suppressHydrationWarning is the documented next-themes requirement:
+    // the theme class is applied by an inline script before hydration, so
+    // the server-rendered class list and the first client render legitimately
+    // differ for one attribute, on purpose.
     <html
       lang="en"
-      className={`dark ${barlow.variable} ${inter.variable} ${plexMono.variable} h-full antialiased`}
+      suppressHydrationWarning
+      className={`${barlow.variable} ${inter.variable} ${plexMono.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col bg-background text-foreground">
-        <SiteHeader />
-        <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-6">{children}</div>
-        <Toaster position="top-center" />
+      <body className="min-h-full bg-background text-foreground">
+        <ThemeProvider>
+          <div className="flex min-h-full">
+            <AppSidebar />
+            <div className="flex min-h-full min-w-0 flex-1 flex-col">
+              <SiteHeader />
+              <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 pb-24 lg:pb-6">
+                {children}
+              </main>
+            </div>
+          </div>
+          <BottomTabBar />
+          <Toaster position="top-center" />
+        </ThemeProvider>
       </body>
     </html>
   );

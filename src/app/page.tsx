@@ -71,7 +71,7 @@ export default async function Home() {
   return (
     <main className="flex flex-col gap-4 lg:gap-5">
       {/* ---- Identity strip: who you are, what you do here ---------------- */}
-      <header className="flex flex-col gap-4 rounded-md border border-line bg-surface-raised p-4 sm:p-5">
+      <header className="elevated-flat flex flex-col gap-4 rounded-md border border-line bg-surface-raised p-4 sm:p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="flex min-w-0 items-start gap-3">
             <span className="mt-0.5 grid size-10 shrink-0 place-items-center rounded-md border border-line bg-surface">
@@ -159,7 +159,7 @@ export default async function Home() {
 
       {/* ---- The thesis, stated once ------------------------------------- */}
       <section className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <div className="rounded-md border border-masked/30 bg-masked-muted/30 p-4">
+        <div className="elevated-flat rounded-md border border-masked/30 bg-masked-muted/30 p-4">
           <h2 className="flex items-center gap-2 text-sm font-semibold">
             <Lock className="size-4 text-masked" aria-hidden />
             Bidding here is sealed
@@ -172,7 +172,7 @@ export default async function Home() {
         </div>
         <Link
           href="/browse"
-          className="group flex flex-col rounded-md border border-line bg-surface-raised p-4 transition-colors hover:border-amber/50"
+          className="elevated group flex flex-col rounded-md border border-line bg-surface-raised p-4 transition-colors hover:border-amber/50"
         >
           <h2 className="flex items-center gap-2 text-sm font-semibold">
             <Layers className="size-4 text-amber" aria-hidden />

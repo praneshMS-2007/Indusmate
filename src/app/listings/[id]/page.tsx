@@ -58,7 +58,7 @@ export default async function ListingDetailPage({
           )}
         </header>
 
-        <section className="grid grid-cols-2 gap-4 rounded-md border border-line bg-surface-raised p-4 sm:grid-cols-4">
+        <section className="elevated-flat grid grid-cols-2 gap-4 rounded-md border border-line bg-surface-raised p-4 sm:grid-cols-4">
           <Fact
             icon={<MapPin className="size-3.5" />}
             label={listing.destCity ? "Route" : "Location"}
@@ -86,7 +86,7 @@ export default async function ListingDetailPage({
 
         <section className="flex flex-col gap-3">
           <h2 className="text-sm font-medium">{meta.label} specification</h2>
-          <dl className="divide-y divide-border/40 overflow-hidden rounded-md border border-line bg-surface-raised">
+          <dl className="elevated-flat divide-y divide-border/40 overflow-hidden rounded-md border border-line bg-surface-raised">
             {spec.map((row) => (
               <div key={row.label} className="grid grid-cols-3 gap-3 px-4 py-2.5 text-sm">
                 <dt className="col-span-1 text-text-secondary">{row.label}</dt>
@@ -119,7 +119,7 @@ export default async function ListingDetailPage({
 
       {/* ---- Sidebar ------------------------------------------------- */}
       <aside className="flex w-full shrink-0 flex-col gap-4 lg:w-80">
-        <section className="rounded-md border border-line bg-surface-raised p-4">
+        <section className="elevated-flat rounded-md border border-line bg-surface-raised p-4">
           <h2 className="mb-3 text-xs tracking-wide text-text-secondary uppercase">
             Listed by
           </h2>
@@ -146,7 +146,7 @@ export default async function ListingDetailPage({
           </p>
         </section>
 
-        <section className="rounded-md border border-line bg-surface-raised p-4">
+        <section className="elevated-flat rounded-md border border-line bg-surface-raised p-4">
           <div className="mb-3 flex items-center justify-between border-b border-line-subtle pb-3">
             <span className="type-eyebrow">Bidding</span>
             <span className="type-data text-xs text-amber">{timeRemaining(listing.closesAt)}</span>

@@ -60,7 +60,7 @@ export function RolePicker({ roles }: { roles: RoleGroup[] }) {
               type="button"
               onClick={() => setChosen(type)}
               className={cn(
-                "group flex min-h-[44px] flex-col gap-2 rounded-md border bg-surface-raised p-4 text-left transition-colors",
+                "elevated group flex min-h-[44px] flex-col gap-2 rounded-md border bg-surface-raised p-4 text-left transition-colors",
                 "border-line hover:border-amber/60",
               )}
             >
@@ -107,7 +107,7 @@ export function RolePicker({ roles }: { roles: RoleGroup[] }) {
             onClick={() => pickOrg(org.id)}
             disabled={pending}
             className={cn(
-              "flex min-h-[44px] items-center gap-3 rounded-md border border-line bg-surface-raised p-3 text-left transition-colors",
+              "elevated flex min-h-[44px] items-center gap-3 rounded-md border border-line bg-surface-raised p-3 text-left transition-colors",
               "hover:border-amber/60 disabled:opacity-60",
             )}
           >

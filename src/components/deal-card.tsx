@@ -109,7 +109,7 @@ export function DealCard({ deal }: { deal: DealCardData }) {
   }
 
   return (
-    <article className="flex flex-col gap-4 rounded-md border border-line bg-surface-raised p-4">
+    <article className="elevated-flat flex flex-col gap-4 rounded-md border border-line bg-surface-raised p-4">
       <div className="flex flex-wrap items-start gap-2">
         <Badge variant="outline" className={meta.badgeClass}>
           {meta.label}

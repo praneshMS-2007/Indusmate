@@ -52,15 +52,22 @@ export function BentoCard({
   return (
     <section
       className={cn(
-        "flex min-w-0 flex-col rounded-md border bg-surface-raised",
+        "elevated flex min-w-0 flex-col rounded-md border bg-surface-raised",
         hero && heroClass ? heroClass : "border-line",
         BENTO_SPAN[span],
         className,
       )}
     >
       <header className="flex items-center justify-between gap-2 border-b border-line-subtle px-4 py-3">
-        <div className="flex min-w-0 items-center gap-2">
-          {Icon && <Icon className="size-4 shrink-0 text-text-secondary" aria-hidden />}
+        <div className="flex min-w-0 items-center gap-2.5">
+          {Icon && (
+            <span
+              aria-hidden
+              className="grid size-7 shrink-0 place-items-center rounded-md bg-surface-sunken text-text-secondary"
+            >
+              <Icon className="size-3.5" />
+            </span>
+          )}
           <div className="min-w-0">
             {eyebrow && <p className="type-eyebrow">{eyebrow}</p>}
             <h2 className="truncate text-sm font-medium">{title}</h2>
@@ -109,19 +116,24 @@ export function KpiTile({
     <Link
       href={href}
       className={cn(
-        "group flex min-w-0 flex-col justify-between gap-2 rounded-md border p-3 transition-colors",
+        "elevated group flex min-w-0 flex-col justify-between gap-3 rounded-md border p-3.5 transition-colors",
         BENTO_SPAN.quarter,
         lit
           ? "border-amber/50 bg-amber-muted/25 hover:border-amber"
           : "border-line bg-surface-raised hover:border-line-strong",
       )}
     >
-      <span className="flex items-center gap-1.5">
-        <Icon
-          className={cn("size-3.5 shrink-0", lit ? "text-amber" : "text-text-tertiary")}
-          aria-hidden
-        />
+      <span className="flex items-start justify-between gap-2">
         <span className="truncate text-[11px] leading-tight text-text-secondary">{label}</span>
+        <span
+          aria-hidden
+          className={cn(
+            "grid size-7 shrink-0 place-items-center rounded-md",
+            lit ? "bg-amber text-on-amber" : "bg-surface-sunken text-text-tertiary",
+          )}
+        >
+          <Icon className="size-3.5" />
+        </span>
       </span>
       <span className="flex items-baseline gap-0.5">
         <span

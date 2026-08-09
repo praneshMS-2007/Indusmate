@@ -90,7 +90,10 @@ export function MaskedBidCard({
     <article
       data-state={revealed ? "revealed" : "sealed"}
       className={cn(
-        "relative flex flex-col gap-3 rounded-md border bg-surface-raised p-4 transition-colors",
+        // elevated-flat, not elevated: this card is never itself a link, so a
+        // hover-lift would promise clickability it does not have. Depth
+        // without the motion cue.
+        "elevated-flat relative flex flex-col gap-3 rounded-md border bg-surface-raised p-4 transition-colors",
         revealed ? "border-teal/45" : "border-masked/30",
         best && "ring-1 ring-amber/40",
         className,

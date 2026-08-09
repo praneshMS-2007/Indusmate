@@ -37,7 +37,7 @@ export function ListingCard({ listing, bidCount }: { listing: Listing; bidCount:
   return (
     <Link
       href={`/listings/${listing.id}`}
-      className="group flex flex-col gap-3 rounded-md border border-line bg-surface-raised p-4 transition-colors hover:border-amber/50"
+      className="elevated group flex flex-col gap-3 rounded-md border border-line bg-surface-raised p-4 transition-colors hover:border-amber/50"
     >
       <div className="flex flex-wrap items-start gap-1.5">
         <Badge variant="outline" className={meta.badgeClass}>

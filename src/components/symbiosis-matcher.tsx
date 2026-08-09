@@ -71,7 +71,7 @@ export function SymbiosisMatcher({ listingId }: { listingId: string }) {
 
   if (state === "idle") {
     return (
-      <section className="rounded-md border border-teal/30 bg-teal-muted/20 p-4">
+      <section className="elevated-flat rounded-md border border-teal/30 bg-teal-muted/20 p-4">
         <div className="flex items-start gap-3">
           <Sparkles className="mt-0.5 size-5 shrink-0 text-teal" aria-hidden />
           <div className="min-w-0 flex-1">
@@ -131,7 +131,7 @@ export function SymbiosisMatcher({ listingId }: { listingId: string }) {
   // state === "done"
   const r = result!;
   return (
-    <section className="flex flex-col gap-4 rounded-md border border-teal/30 bg-teal-muted/10 p-4">
+    <section className="elevated flex flex-col gap-4 rounded-md border border-teal/30 bg-teal-muted/10 p-4">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <p className="type-eyebrow flex items-center gap-1.5 text-teal">
@@ -195,7 +195,7 @@ export function SymbiosisMatcher({ listingId }: { listingId: string }) {
           {r.matches.map((m, i) => (
             <article
               key={i}
-              className="flex flex-col gap-2 rounded-md border border-line bg-surface-raised p-3"
+              className="elevated-flat flex flex-col gap-2 rounded-md border border-line bg-surface-raised p-3"
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">

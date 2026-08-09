@@ -197,7 +197,7 @@ export function MarketFeedCard({ data, role }: { data: DashboardData; role: Orga
           <Link
             key={l.id}
             href={`/listings/${l.id}`}
-            className="flex min-w-0 flex-col gap-1.5 rounded-md border border-line bg-surface p-3 transition-colors hover:border-amber/50"
+            className="elevated-flat flex min-w-0 flex-col gap-1.5 rounded-md border border-line bg-surface p-3 transition-colors hover:border-amber/50"
           >
             <span className="flex items-center gap-1.5">
               <TypeDot type={l.type} />
