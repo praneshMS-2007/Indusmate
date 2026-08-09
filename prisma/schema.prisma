@@ -1,7 +1,12 @@
 // Industrial Nexus — database schema
-// Models are added in Block 1. This file exists in Block 0 so the Vercel build
-// pipeline (`prisma generate && next build`) is proven working before any
-// product code depends on it.
+//
+// THE CENTRAL IDEA: there is ONE `Listing` table. A raw material lot, a waste
+// stream, an idle machine-hour, a technician's shift and a truck's return leg
+// are all the same row with a different `type` and a different `spec` payload.
+// There is ONE deal state machine serving all five markets.
+//
+// If you are about to add a market-specific table or a market-specific state,
+// the abstraction is wrong — stop.
 
 generator client {
   provider = "prisma-client-js"
@@ -14,4 +19,303 @@ datasource db {
   // Session pooler (5432) — used by `prisma migrate`, which cannot run
   // through the transaction pooler.
   directUrl = env("DIRECT_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum OrgType {
+  MANUFACTURER
+  SUPPLIER
+  TRANSPORTER
+  RECYCLER
+}
+
+/// The five markets. Adding a sixth market means adding a value here and a
+/// spec variant in src/lib/listing-spec.ts — not a new table.
+enum ListingType {
+  RAW_MATERIAL
+  BYPRODUCT
+  EQUIPMENT
+  LABOUR
+  FREIGHT
+}
+
+/// REVERSE: one buyer, many sellers, price competes DOWN (freight, tenders).
+/// FORWARD: one seller, many buyers, price competes UP  (scarce byproducts).
+/// Same state machine either way — this is the only flag that differs.
+enum AuctionDirection {
+  REVERSE
+  FORWARD
+}
+
+enum ListingStatus {
+  OPEN
+  BIDDING
+  AWARDED
+  CLOSED
+  CANCELLED
+  EXPIRED
+}
+
+/// The single lifecycle, shared by all five markets.
+/// LISTED -> BIDDING -> COUNTERED -> ACCEPTED -> CONTRACTED -> IN_EXECUTION
+///        -> SETTLED -> RATED
+/// Terminal: REJECTED, CANCELLED, EXPIRED
+enum DealState {
+  LISTED
+  BIDDING
+  COUNTERED
+  ACCEPTED
+  CONTRACTED
+  IN_EXECUTION
+  SETTLED
+  RATED
+  REJECTED
+  CANCELLED
+  EXPIRED
+}
+
+enum BidStatus {
+  ACTIVE
+  COUNTERED
+  WITHDRAWN
+  ACCEPTED
+  REJECTED
+}
+
+/// Who moved the price last in a counter-offer exchange. Determines whose
+/// turn it is to respond.
+enum CounterParty {
+  OWNER
+  BIDDER
+}
+
+// ---------------------------------------------------------------------------
+// Organisation
+// ---------------------------------------------------------------------------
+
+model Organisation {
+  id   String  @id @default(cuid())
+  name String
+  type OrgType
+
+  // Location — used by the map view and by "near me" queries.
+  city String
+  lat  Float
+  lng  Float
+
+  // Reputation. These aggregates are the ONLY organisation data a viewer may
+  // see about a counterparty before a deal reaches ACCEPTED.
+  verified  Boolean @default(true)
+  rating    Float   @default(4.5)
+  dealCount Int     @default(0)
+  onTimePct Int     @default(90)
+
+  /// The pseudonym shown in place of identity while bidding is sealed,
+  /// e.g. "Verified Transporter #4471". Safe to expose at any deal state.
+  pseudonymHandle String @unique
+
+  // IDENTITY — never leaves the server before a deal reaches ACCEPTED.
+  // Everything below this line must be stripped by maskBid().
+  legalName    String
+  contactName  String
+  contactPhone String
+  contactEmail String
+  gstin        String
+
+  listings   Listing[]
+  bids       Bid[]
+  buyerDeals Deal[]        @relation("BuyerOrg")
+  sellerDeals Deal[]       @relation("SellerOrg")
+  dealEvents DealEvent[]
+  ratingsGiven    Rating[] @relation("RaterOrg")
+  ratingsReceived Rating[] @relation("RatedOrg")
+
+  createdAt DateTime @default(now())
+
+  @@index([type])
+  @@index([city])
+}
+
+// ---------------------------------------------------------------------------
+// Listing — the one table that serves all five markets
+// ---------------------------------------------------------------------------
+
+model Listing {
+  id          String      @id @default(cuid())
+  type        ListingType
+  title       String
+  description String
+
+  ownerOrgId String
+  ownerOrg   Organisation @relation(fields: [ownerOrgId], references: [id], onDelete: Cascade)
+
+  direction AuctionDirection
+  status    ListingStatus    @default(OPEN)
+
+  /// The typed, market-specific payload. Shape is enforced in TypeScript by
+  /// the discriminated union in src/lib/listing-spec.ts, keyed on `type`.
+  /// This is what lets five markets share one table.
+  spec Json
+
+  // Primary location. For FREIGHT this is the origin; for every other type it
+  // is where the capacity physically sits.
+  locationCity String
+  locationLat  Float
+  locationLng  Float
+
+  // Destination — FREIGHT only. Null for all other types.
+  destCity String?
+  destLat  Float?
+  destLng  Float?
+
+  // The time window the capacity is available / required.
+  windowStart DateTime
+  windowEnd   DateTime
+
+  quantity Float
+  unit     String
+
+  /// Owner's indicative price in whole rupees. Money is stored as Int (rupees)
+  /// throughout — no floats, no rounding surprises mid-demo.
+  referencePrice Int
+  closesAt       DateTime
+
+  bids  Bid[]
+  deals Deal[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([type])
+  @@index([status])
+  @@index([locationCity])
+  @@index([ownerOrgId])
+}
+
+// ---------------------------------------------------------------------------
+// Bid — sealed. See src/lib/masking.ts
+// ---------------------------------------------------------------------------
+
+model Bid {
+  id String @id @default(cuid())
+
+  listingId String
+  listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  bidderOrgId String
+  bidderOrg   Organisation @relation(fields: [bidderOrgId], references: [id], onDelete: Cascade)
+
+  /// Whole rupees.
+  amount  Int
+  message String?
+  status  BidStatus @default(ACTIVE)
+
+  // Counter-offer exchange. Null until the owner counters.
+  counterAmount Int?
+  counterBy     CounterParty?
+  counterNote   String?
+
+  deal Deal?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  /// One bid per organisation per listing. Re-bidding updates this row rather
+  /// than creating a second one.
+  @@unique([listingId, bidderOrgId])
+  @@index([listingId])
+  @@index([bidderOrgId])
+}
+
+// ---------------------------------------------------------------------------
+// Deal — one per awarded listing
+// ---------------------------------------------------------------------------
+
+model Deal {
+  id String @id @default(cuid())
+
+  listingId String
+  listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  buyerOrgId String
+  buyerOrg   Organisation @relation("BuyerOrg", fields: [buyerOrgId], references: [id])
+
+  sellerOrgId String
+  sellerOrg   Organisation @relation("SellerOrg", fields: [sellerOrgId], references: [id])
+
+  /// The bid that won. Identity behind it is revealed only from ACCEPTED on.
+  winningBidId String @unique
+  winningBid   Bid    @relation(fields: [winningBidId], references: [id], onDelete: Cascade)
+
+  state DealState @default(ACCEPTED)
+  /// Agreed price in whole rupees.
+  price Int
+
+  events  DealEvent[]
+  ratings Rating[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([state])
+  @@index([buyerOrgId])
+  @@index([sellerOrgId])
+}
+
+// ---------------------------------------------------------------------------
+// DealEvent — append-only audit log
+// ---------------------------------------------------------------------------
+
+/// Every state change writes exactly one row here, from transitionDeal().
+/// Never updated, never deleted. This is the evidence trail that the deal
+/// followed a legal path, and it is what we show judges to prove the state
+/// machine is real rather than decorative.
+model DealEvent {
+  id String @id @default(cuid())
+
+  dealId String
+  deal   Deal   @relation(fields: [dealId], references: [id], onDelete: Cascade)
+
+  fromState DealState?
+  toState   DealState
+
+  actorOrgId String
+  actorOrg   Organisation @relation(fields: [actorOrgId], references: [id])
+
+  note String?
+
+  createdAt DateTime @default(now())
+
+  @@index([dealId])
+  @@index([createdAt])
+}
+
+// ---------------------------------------------------------------------------
+// Rating
+// ---------------------------------------------------------------------------
+
+model Rating {
+  id String @id @default(cuid())
+
+  dealId String
+  deal   Deal   @relation(fields: [dealId], references: [id], onDelete: Cascade)
+
+  raterOrgId String
+  raterOrg   Organisation @relation("RaterOrg", fields: [raterOrgId], references: [id])
+
+  ratedOrgId String
+  ratedOrg   Organisation @relation("RatedOrg", fields: [ratedOrgId], references: [id])
+
+  /// 1..5
+  score   Int
+  comment String?
+
+  createdAt DateTime @default(now())
+
+  /// One rating per rater per deal.
+  @@unique([dealId, raterOrgId])
+  @@index([ratedOrgId])
 }
