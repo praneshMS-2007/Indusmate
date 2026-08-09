@@ -47,6 +47,7 @@ const REVEAL_PAGES = new Set(["/deals"]);
 /** Pages that must never expose identity. Extend as screens are added. */
 const PAGES = [
   "/",
+  "/welcome",
   "/browse",
   "/browse?type=FREIGHT",
   "/listings/new",

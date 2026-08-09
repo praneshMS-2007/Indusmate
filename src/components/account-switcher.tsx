@@ -1,7 +1,8 @@
 "use client";
 
 import { useTransition } from "react";
-import { BadgeCheck, ChevronDown, Loader2 } from "lucide-react";
+import Link from "next/link";
+import { BadgeCheck, ChevronDown, Loader2, UserCog } from "lucide-react";
 import type { OrgType } from "@prisma/client";
 
 import type { DemoOrgOption } from "@/lib/auth";
@@ -80,6 +81,16 @@ export function AccountSwitcher({
         <DropdownMenuLabel className="text-xs font-normal text-text-secondary">
           Switch account — no password, this is a demo stub
         </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+
+        {/* The role picker is the better entry point — it leads with what the
+            four postures mean, rather than twelve company names. */}
+        <DropdownMenuItem asChild>
+          <Link href="/welcome" className="gap-2">
+            <UserCog className="size-4 text-amber" />
+            <span className="text-sm">Choose by role instead</span>
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
 
         {TYPE_ORDER.map((type) => {
