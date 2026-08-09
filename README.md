@@ -8,7 +8,7 @@
 | | |
 |---|---|
 | **Project Title** | Industrial Nexus |
-| **Team Name** | _TBD — see "Team Members" below_ |
+| **Team Name** | **COLDSTACK** |
 | **Live Demo** | _Deployment pending — link goes here_ |
 | **Repository** | https://github.com/praneshMS-2007/Indusmate |
 
@@ -113,11 +113,14 @@ the other four are creatable and browsable through the same engine.
 
 ## Team Members
 
-| Name | GitHub | Role |
-|---|---|---|
-| Pranesh M S | [@praneshMS-2007](https://github.com/praneshMS-2007) | _TBD_ |
+**Team COLDSTACK**
 
-_Remaining team members to be added._
+| Name | GitHub |
+|---|---|
+| Pranesh M S — *Team Lead* | [@praneshMS-2007](https://github.com/praneshMS-2007) |
+| Avinash A S | [@AVINASHHZ](https://github.com/AVINASHHZ) |
+| Kannan S | [@kindlingkannan-web](https://github.com/kindlingkannan-web) |
+| Yashwanth | [@yashliveinsaan](https://github.com/yashliveinsaan) |
 
 ## Setup Instructions
 
