@@ -1,0 +1,17 @@
+// Industrial Nexus — database schema
+// Models are added in Block 1. This file exists in Block 0 so the Vercel build
+// pipeline (`prisma generate && next build`) is proven working before any
+// product code depends on it.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // Transaction pooler (6543) — used by the running app. Survives serverless.
+  url       = env("DATABASE_URL")
+  // Session pooler (5432) — used by `prisma migrate`, which cannot run
+  // through the transaction pooler.
+  directUrl = env("DIRECT_URL")
+}
