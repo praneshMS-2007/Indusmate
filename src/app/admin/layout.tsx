@@ -75,14 +75,40 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col">
-        <header className="flex h-16 items-center justify-between border-b border-line bg-surface px-6 lg:hidden">
-          <span className="type-display font-bold">Admin Portal</span>
-          <LogoutButton 
-            label=""
-            showIcon={true}
-            variant="ghost"
-            className="text-text-tertiary px-2"
-          />
+        <header className="flex flex-col border-b border-line bg-surface lg:hidden">
+          <div className="flex h-14 items-center justify-between px-4">
+            <span className="type-display text-lg font-bold">Admin Portal</span>
+            <LogoutButton 
+              label="Log out"
+              showIcon={true}
+              variant="ghost"
+              className="text-text-tertiary text-xs px-2 h-8"
+            />
+          </div>
+          <nav className="flex border-t border-line-subtle px-2 py-1 gap-1">
+            <Link 
+              href="/admin/kyc" 
+              className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 text-xs font-semibold rounded-md transition-colors ${
+                isKycActive 
+                  ? "bg-amber text-on-amber" 
+                  : "text-text-secondary hover:bg-surface-raised"
+              }`}
+            >
+              <ShieldCheck className="size-3.5" />
+              Queue
+            </Link>
+            <Link 
+              href="/admin/logs" 
+              className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 text-xs font-semibold rounded-md transition-colors ${
+                isLogsActive 
+                  ? "bg-amber text-on-amber" 
+                  : "text-text-secondary hover:bg-surface-raised"
+              }`}
+            >
+              <History className="size-3.5" />
+              Logs
+            </Link>
+          </nav>
         </header>
         <div className="p-6 flex-1">
           {children}

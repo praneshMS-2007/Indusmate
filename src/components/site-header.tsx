@@ -16,22 +16,23 @@ export async function SiteHeader() {
   const current = await getCurrentOrg();
 
   return (
-    <header className="relative z-30 mx-4 mt-4 mb-4 lg:mx-6 lg:mb-6 rounded-xl bg-[#3E2723] text-white shadow-lg border border-[#4E3733]">
-      <div className="flex items-center justify-between lg:justify-evenly px-5 py-3.5">
+    <header className="relative z-30 mx-4 mt-4 mb-4 lg:mx-6 lg:mb-6 rounded-xl bg-surface-raised text-text-primary shadow-sm border border-line">
+      <div className="flex items-center justify-between px-5 py-3.5">
         
         {/* Mobile Logo */}
         <Link href="/" className="flex shrink-0 items-center gap-2 lg:hidden">
           <span
             aria-hidden
-            className="type-display grid size-8 place-items-center rounded-sm bg-amber text-sm text-on-amber"
+            className="type-display grid size-8 place-items-center rounded-md bg-amber text-sm font-bold text-on-amber"
           >
             IM
           </span>
+          <span className="type-display text-lg font-bold text-text-primary">IndusMate</span>
         </Link>
 
         {/* Desktop: KYC verified */}
         {current.verified ? (
-          <span className="hidden lg:flex items-center gap-2 font-medium text-white">
+          <span className="hidden lg:flex items-center gap-2 font-medium text-teal">
             <BadgeCheck className="size-5" />
             KYC verified
           </span>
@@ -40,10 +41,10 @@ export async function SiteHeader() {
         )}
 
         {/* Desktop: Rating */}
-        <span className="hidden lg:flex type-data items-center gap-2 text-white">
-          <Star className="size-5 fill-amber-400 text-amber-400" />
+        <span className="hidden lg:flex type-data items-center gap-2 text-text-primary">
+          <Star className="size-5 fill-amber text-amber" />
           <span className="text-base font-semibold">{current.rating.toFixed(1)}</span>
-          <span className="text-white ml-1">· {current.dealCount} deals</span>
+          <span className="text-text-secondary ml-1">· {current.dealCount} deals</span>
         </span>
 
         {/* Both: Right side (Theme toggle on mobile + Company Name) */}
@@ -52,8 +53,8 @@ export async function SiteHeader() {
             <ThemeToggle collapsed />
           </div>
           <div className="flex flex-col">
-            <span className="text-sm font-semibold tracking-wide text-white">{current.name}</span>
-            <span className="type-caption text-white">{current.type}</span>
+            <span className="text-sm font-bold tracking-wide text-text-primary">{current.name}</span>
+            <span className="type-caption text-text-tertiary">{current.type}</span>
           </div>
         </div>
         
