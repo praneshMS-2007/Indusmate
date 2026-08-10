@@ -42,18 +42,12 @@ export default async function AdminKycPage() {
                 </div>
                 
                 <div className="flex gap-2">
-                  <form action={async () => {
-                    "use server";
-                    await processKyc(org.id, "REJECTED");
-                  }}>
+                  <form action={processKyc.bind(null, org.id, "REJECTED")}>
                     <Button type="submit" variant="outline" className="text-red-500 hover:bg-red-500/10 hover:text-red-600">
                       <XCircle className="mr-2 size-4" /> Reject
                     </Button>
                   </form>
-                  <form action={async () => {
-                    "use server";
-                    await processKyc(org.id, "APPROVED");
-                  }}>
+                  <form action={processKyc.bind(null, org.id, "APPROVED")}>
                     <Button type="submit" className="bg-teal-600 hover:bg-teal-700 text-white">
                       <BadgeCheck className="mr-2 size-4" /> Approve
                     </Button>
