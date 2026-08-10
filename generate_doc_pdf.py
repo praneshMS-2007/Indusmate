@@ -18,7 +18,6 @@ def build_pdf():
 
     styles = getSampleStyleSheet()
 
-    # Custom typography & color palette
     header_org_style = ParagraphStyle(
         'HeaderOrg',
         parent=styles['Normal'],
@@ -26,7 +25,7 @@ def build_pdf():
         fontSize=10,
         leading=12,
         textColor=colors.HexColor('#0F766E'),
-        alignment=1, # Center
+        alignment=1,
         spaceAfter=2
     )
 
@@ -61,17 +60,6 @@ def build_pdf():
         textColor=colors.HexColor('#0F172A'),
         spaceBefore=10,
         spaceAfter=4
-    )
-
-    sub_section_heading = ParagraphStyle(
-        'SubSecHeading',
-        parent=styles['Heading3'],
-        fontName='Helvetica-Bold',
-        fontSize=10.5,
-        leading=13.5,
-        textColor=colors.HexColor('#0F766E'),
-        spaceBefore=6,
-        spaceAfter=3
     )
 
     body_style = ParagraphStyle(
@@ -147,9 +135,10 @@ def build_pdf():
     links_data = [
         [Paragraph("<b>GitHub Repository Link</b>", table_header_style), Paragraph("<u><font color='#0F766E'>https://github.com/praneshMS-2007/Indusmate</font></u> (Public)", table_body_style)],
         [Paragraph("<b>Live Deployed Link</b>", table_header_style), Paragraph("<u><font color='#0F766E'>https://indusmate.vercel.app</font></u> (Live on Vercel)", table_body_style)],
-        [Paragraph("<b>Demo Walkthrough Link</b>", table_header_style), Paragraph("<u><font color='#0F766E'>https://github.com/praneshMS-2007/Indusmate/blob/main/DEMO.md</font></u>", table_body_style)],
+        [Paragraph("<b>Demo Video Drive Link</b>", table_header_style), Paragraph("<u><font color='#0F766E'>https://drive.google.com/drive/folders/1uNk-gQDxbypHJ-23VQl4YRwfi5fk1_gH</font></u>", table_body_style)],
+        [Paragraph("<b>Presentation Deck Canva Link</b>", table_header_style), Paragraph("<u><font color='#0F766E'>https://canva.link/rbn90jqm4jr5e5m</font></u>", table_body_style)],
     ]
-    links_table = Table(links_data, colWidths=[130, 410])
+    links_table = Table(links_data, colWidths=[140, 400])
     links_table.setStyle(TableStyle([
         ('BACKGROUND', (0,0), (0,-1), colors.HexColor('#F8FAFC')),
         ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#CBD5E1')),
@@ -167,9 +156,9 @@ def build_pdf():
 
     # 5. PROBLEM BEING SOLVED
     story.append(Paragraph("PROBLEM BEING SOLVED", section_heading))
-    story.append(Paragraph("Indian industrial commerce operates through informal phone calls, fragmented WhatsApp groups, and commission brokers. This results in three critical failure points:", body_style))
+    story.append(Paragraph("Indian industrial commerce operates through informal phone calls, fragmented WhatsApp groups, and commission brokers. This results in four critical failure points:", body_style))
     story.append(Paragraph("• <b>Broken Price Discovery & Middleman Markups:</b> Freight rates and raw material prices are set arbitrarily by intermediaries, imposing 12–18% unnecessary markups and inflating MSME operational costs.", bullet_style))
-    story.append(Paragraph("• <b>Public Bid Leakage & Price Discrimination:</b> Traditional open tenders leak tenderer amounts before closing. Suppliers avoid submitting honest lowest prices because public disclosure exposes their commercial margins to rival buyers.", bullet_style))
+    story.append(Paragraph("• <b>Public Bid Leakage & Price Discrimination:</b> Traditional open tenders leak tenderer amounts before closing. Suppliers refrain from offering their true lowest prices because public disclosure exposes their commercial margins to rival buyers.", bullet_style))
     story.append(Paragraph("• <b>Unmapped Industrial Waste & Byproducts:</b> 68% of industrial waste (fly ash, slag, chemical sludge, spent catalyst) is landfilled because factories search materials by brand name rather than chemical composition, turning sellable resources into disposal costs.", bullet_style))
     story.append(Paragraph("• <b>Unutilized Logistics Fleet Backhaul:</b> Transporters return with empty trucks on 35% of interstate routes due to lack of real-time return-leg freight visibility.", bullet_style))
     story.append(Spacer(1, 8))
@@ -180,7 +169,7 @@ def build_pdf():
     story.append(Paragraph("• <b>Strict Server-Side Sealed Anonymity:</b> Bidders never see rival amounts. Listing owners view pseudonymous handles and reputation metrics (e.g. <i>Transporter #4471 · 4.7/5 · 128 deals</i>). Private identities (GSTIN, legal name, phone) are released strictly upon deal <code>ACCEPTED</code>.", bullet_style))
     story.append(Paragraph("• <b>AI Waste-to-Resource Symbiosis Engine:</b> Uses Google Gemini 2.5 LLM to analyze chemical & physical specifications of industrial byproducts and match selling factories directly with buying recyclers.", bullet_style))
     story.append(Paragraph("• <b>Enterprise Admin KYC & Real-Time Audit Logs:</b> Full multi-document KYC verification flow with dedicated administrative queue (`/admin/kyc`) and transparent audit logging (`/admin/logs`).", bullet_style))
-    story.append(Paragraph("• <b>Sub-100ms Request-Level Performance:</b> Powered by Next.js 16 App Router, React 19, <code>React.cache()</code> query memoization, and Supabase PgBouncer connection pooling.", bullet_style))
+    story.append(Paragraph("• <b>Sub-100ms Request-Level Performance:</b> Powered by Next.js 16 App Router, React 19, <code>React.cache()</code> query memoization, WebP compressed assets, Vercel Mumbai (`bom1`) edge functions, and Supabase PgBouncer connection pooling.", bullet_style))
     story.append(Spacer(1, 8))
 
     # 7. KEY FEATURES
@@ -202,7 +191,7 @@ def build_pdf():
         [Paragraph("<b>Database</b>", table_body_style), Paragraph("PostgreSQL (Supabase) + Prisma 6 ORM", table_body_style), Paragraph("Request-level React.cache() memoization, PgBouncer pooling", table_body_style)],
         [Paragraph("<b>AI / LLM</b>", table_body_style), Paragraph("Google Gemini 2.5 Flash API (@google/genai)", table_body_style), Paragraph("Automated byproduct waste stream matching & economic valuation", table_body_style)],
         [Paragraph("<b>Auth & Security</b>", table_body_style), Paragraph("Auth.js (NextAuth v5), Bcrypt, HTTP-only JWT Cookies", table_body_style), Paragraph("Credentials auth, RBAC guards, Admin KYC verification", table_body_style)],
-        [Paragraph("<b>Deployment</b>", table_body_style), Paragraph("Vercel Cloud Serverless + Supabase Managed DB", table_body_style), Paragraph("Sub-100ms global production edge hosting", table_body_style)],
+        [Paragraph("<b>Deployment</b>", table_body_style), Paragraph("Vercel Cloud Serverless (bom1 region) + Supabase Managed DB", table_body_style), Paragraph("Sub-100ms global production edge hosting", table_body_style)],
     ]
     tech_table = Table(tech_data, colWidths=[90, 210, 240])
     tech_table.setStyle(TableStyle([
