@@ -59,6 +59,7 @@ export interface EquipmentSpec {
   operatorIncluded: boolean;
   minimumHours: number;
   mobilisationRadiusKm: number;
+  dailyTimings?: string;
 }
 
 export interface LabourSpec {
@@ -69,6 +70,7 @@ export interface LabourSpec {
   shiftHours: number;
   experienceYears: number;
   safetyTrained: boolean;
+  dailyTimings?: string;
 }
 
 export interface FreightSpec {
@@ -265,6 +267,7 @@ export const SPEC_FIELDS: Record<ListingType, readonly SpecField[]> = {
     { name: "operatorIncluded", label: "Operator included", kind: "boolean" },
     { name: "minimumHours", label: "Minimum booking", kind: "number", suffix: "hrs", required: true },
     { name: "mobilisationRadiusKm", label: "Mobilisation radius", kind: "number", suffix: "km" },
+    { name: "dailyTimings", label: "Available timings", kind: "text", placeholder: "09:00 - 18:00", help: "The daily operating hours for this machine." },
   ],
 
   LABOUR: [
@@ -280,6 +283,7 @@ export const SPEC_FIELDS: Record<ListingType, readonly SpecField[]> = {
     { name: "shiftHours", label: "Shift length", kind: "number", suffix: "hrs", required: true },
     { name: "experienceYears", label: "Minimum experience", kind: "number", suffix: "yrs" },
     { name: "safetyTrained", label: "Safety trained", kind: "boolean" },
+    { name: "dailyTimings", label: "Shift timings", kind: "text", placeholder: "08:00 - 16:00", help: "The standard working hours for this team." },
   ],
 
   FREIGHT: [

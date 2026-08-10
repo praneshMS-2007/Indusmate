@@ -7,7 +7,7 @@
  * would give the answer away. It has to work outward from chemistry to the
  * industries that can eat it.
  *
- * That is a deliberate handicap. It is also the demo: the platform never told
+ * That is a deliberate handicap. It is also the proof of concept: the platform never told
  * the model the words "fly ash", and the model came back with cement, bricks
  * and road base anyway.
  *
@@ -27,7 +27,7 @@ import type { ByproductSpec } from "./listing-spec";
 
 /**
  * Pinned deliberately, not `gemini-flash-latest`. An alias can move under us
- * between rehearsal and demo, and the one thing worse than a slow matcher is
+ * between deployments, and the one thing worse than a slow matcher is
  * one that behaved differently ten minutes ago.
  */
 export const SYMBIOSIS_MODEL = "gemini-3.6-flash";
@@ -283,9 +283,9 @@ async function loadRoster(excludeOrgId: string): Promise<RosterEntry[]> {
  * In-process cache, keyed by listing id and its updatedAt stamp so an edited
  * listing re-matches automatically.
  *
- * Two reasons, both about the demo. A second click during the presentation
- * returns instantly instead of waiting on the network, and repeated clicks
- * while rehearsing do not burn the free-tier quota. It is deliberately not
+ * Performance optimisation: a repeated request for the same unchanged listing
+ * returns instantly instead of making a redundant API call, and repeated
+ * requests do not consume API quota unnecessarily. It is deliberately not
  * Redis — a Map dies with the process, which is the correct lifetime for
  * something this cheap to recompute.
  */
@@ -367,7 +367,7 @@ export async function findSymbiosisMatches(
         systemInstruction: SYSTEM_INSTRUCTION,
         responseMimeType: "application/json",
         responseSchema: RESPONSE_SCHEMA,
-        // Low but not zero: the numbers should be stable across demo runs,
+        // Low but not zero: the numbers should be stable across runs,
         // while the prose stays readable.
         temperature: 0.2,
         thinkingConfig: { thinkingLevel: ThinkingLevel.LOW },
@@ -489,7 +489,7 @@ export function verifyOnPlatformClaims(
  *
  * The important step is the on-platform pass: every orgId the model returned
  * is checked against the roster we actually sent, and any it invented is
- * dropped. A hallucinated business partner on a live demo would be a worse
+ * dropped. A hallucinated business partner on a live platform would be a worse
  * failure than no match at all. The org fields shown come from our database,
  * never from the model's echo of them.
  */

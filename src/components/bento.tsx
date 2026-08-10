@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils";
  */
 export function Bento({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn("grid grid-cols-12 gap-3 lg:gap-4", className)}>{children}</div>
+    <div className={cn("grid grid-cols-12 gap-4 lg:gap-6", className)}>{children}</div>
   );
 }
 
@@ -58,7 +58,7 @@ export function BentoCard({
         className,
       )}
     >
-      <header className="flex items-center justify-between gap-2 border-b border-line-subtle px-4 py-3">
+      <header className="flex items-center justify-between gap-2 border-b border-line-subtle px-5 py-4">
         <div className="flex min-w-0 items-center gap-2.5">
           {Icon && (
             <span
@@ -70,7 +70,7 @@ export function BentoCard({
           )}
           <div className="min-w-0">
             {eyebrow && <p className="type-eyebrow">{eyebrow}</p>}
-            <h2 className="truncate text-sm font-medium">{title}</h2>
+            <h2 className="type-heading truncate text-base">{title}</h2>
           </div>
         </div>
         {action && (
@@ -84,7 +84,7 @@ export function BentoCard({
         )}
       </header>
 
-      <div className={cn("flex min-w-0 flex-1 flex-col p-4", bodyClassName)}>{children}</div>
+      <div className={cn("flex min-w-0 flex-1 flex-col p-5", bodyClassName)}>{children}</div>
     </section>
   );
 }
@@ -116,15 +116,15 @@ export function KpiTile({
     <Link
       href={href}
       className={cn(
-        "elevated group flex min-w-0 flex-col justify-between gap-3 rounded-md border p-3.5 transition-colors",
+        "elevated group flex min-w-0 flex-col justify-between gap-4 rounded-md border p-5 transition-colors",
         BENTO_SPAN.quarter,
         lit
-          ? "border-amber/50 bg-amber-muted/25 hover:border-amber"
+          ? "border-amber/50 bg-surface-raised hover:border-amber"
           : "border-line bg-surface-raised hover:border-line-strong",
       )}
     >
       <span className="flex items-start justify-between gap-2">
-        <span className="truncate text-[11px] leading-tight text-text-secondary">{label}</span>
+        <span className="truncate text-sm font-medium leading-tight text-text-secondary">{label}</span>
         <span
           aria-hidden
           className={cn(
@@ -138,7 +138,7 @@ export function KpiTile({
       <span className="flex items-baseline gap-0.5">
         <span
           className={cn(
-            "type-data text-2xl leading-none font-semibold",
+            "type-data truncate text-3xl leading-none font-semibold",
             lit ? "text-amber" : "text-text-primary",
           )}
         >

@@ -26,6 +26,7 @@ import {
   BidStatus,
   CounterParty,
 } from "@prisma/client";
+import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
@@ -1114,8 +1115,27 @@ async function main() {
     },
   });
 
+  console.log("Seeding users...");
+  const hashedPassword = await hash("password123", 12);
+  const allSeededOrgs = await prisma.organisation.findMany();
+  
+  for (const org of allSeededOrgs) {
+    const email = `${org.name.toLowerCase().replace(/[^a-z0-9]/g, "")}@example.com`;
+    await prisma.user.upsert({
+      where: { email },
+      update: { orgId: org.id },
+      create: {
+        email,
+        name: org.contactName,
+        password: hashedPassword,
+        orgId: org.id,
+      },
+    });
+  }
+
   // ---- Verification --------------------------------------------------------
-  const [orgs, listings, bids, deals, events, ratings] = await Promise.all([
+  const [users, orgs, listings, bids, deals, events, ratings] = await Promise.all([
+    prisma.user.count(),
     prisma.organisation.count(),
     prisma.listing.count(),
     prisma.bid.count(),
@@ -1134,6 +1154,7 @@ async function main() {
   });
 
   console.log("\n─────────── SEED COMPLETE ───────────");
+  console.log(`users         : ${users}`);
   console.log(`organisations : ${orgs}`);
   console.log(`listings      : ${listings}`);
   console.log(`bids          : ${bids}`);

@@ -30,6 +30,14 @@ enum OrgType {
   SUPPLIER
   TRANSPORTER
   RECYCLER
+  PLATFORM_ADMIN
+}
+
+enum KycStatus {
+  PENDING_UPLOAD
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
 }
 
 /// The five markets. Adding a sixth market means adding a value here and a
@@ -93,8 +101,31 @@ enum CounterParty {
 }
 
 // ---------------------------------------------------------------------------
-// Organisation
+// Authentication & Organisation
 // ---------------------------------------------------------------------------
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String    // hashed
+  name          String?
+  
+  orgId         String?   @unique
+  org           Organisation? @relation(fields: [orgId], references: [id])
+  
+  sessions      Session[]
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
 
 model Organisation {
   id   String  @id @default(cuid())
@@ -109,6 +140,7 @@ model Organisation {
   // Reputation. These aggregates are the ONLY organisation data a viewer may
   // see about a counterparty before a deal reaches ACCEPTED.
   verified  Boolean @default(true)
+  kycStatus KycStatus @default(APPROVED) // Default to APPROVED to not break seeded demo accounts.
   rating    Float   @default(4.5)
   dealCount Int     @default(0)
   onTimePct Int     @default(90)
@@ -118,12 +150,13 @@ model Organisation {
   pseudonymHandle String @unique
 
   // IDENTITY — never leaves the server before a deal reaches ACCEPTED.
-  // Everything below this line must be stripped by maskBid().
   legalName    String
   contactName  String
   contactPhone String
   contactEmail String
   gstin        String
+
+  users        User[]
 
   listings   Listing[]
   bids       Bid[]
@@ -132,11 +165,32 @@ model Organisation {
   dealEvents DealEvent[]
   ratingsGiven    Rating[] @relation("RaterOrg")
   ratingsReceived Rating[] @relation("RatedOrg")
+  kycDocuments    KycDocument[]
 
   createdAt DateTime @default(now())
 
   @@index([type])
   @@index([city])
+}
+
+// ---------------------------------------------------------------------------
+// KYC Documents
+// ---------------------------------------------------------------------------
+
+model KycDocument {
+  id           String       @id @default(cuid())
+  
+  orgId        String
+  org          Organisation @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  
+  documentType String       // e.g. "RC_BOOK", "GST_CERTIFICATE"
+  fileName     String       // Original uploaded filename
+  mimeType     String       // e.g. "application/pdf", "image/png"
+  fileData     String       // Base64 encoded file contents
+  
+  createdAt    DateTime     @default(now())
+  
+  @@index([orgId])
 }
 
 // ---------------------------------------------------------------------------

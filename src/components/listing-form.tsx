@@ -24,6 +24,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { LocationPicker } from "./location-picker";
+import { MapPin } from "lucide-react";
 
 /** `yyyy-mm-dd` / `yyyy-mm-ddThh:mm` for date inputs, N days from now. */
 function isoDate(daysAhead: number, withTime = false) {
@@ -60,7 +62,13 @@ export function ListingForm({ initialType }: { initialType?: ListingType }) {
     closesAt: isoDate(1, true),
     quantity: "",
     referencePrice: "",
+    locationLat: 28.6139,
+    locationLng: 77.2090,
+    destLat: 28.6139,
+    destLng: 77.2090,
   });
+
+  const [pickerOpen, setPickerOpen] = useState<"origin" | "dest" | null>(null);
 
   const [direction, setDirection] = useState(meta.defaultDirection);
   const [unit, setUnit] = useState(meta.defaultUnit);
@@ -92,6 +100,8 @@ export function ListingForm({ initialType }: { initialType?: ListingType }) {
           spec,
           ...common,
           destCity: meta.hasDestination ? common.destCity : undefined,
+          destLat: meta.hasDestination ? common.destLat : undefined,
+          destLng: meta.hasDestination ? common.destLng : undefined,
           quantity: Number(common.quantity),
           referencePrice: Number(common.referencePrice),
         }),
@@ -166,41 +176,25 @@ export function ListingForm({ initialType }: { initialType?: ListingType }) {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="flex flex-col gap-1.5">
             <Label>{meta.hasDestination ? "Origin" : "Location"}</Label>
-            <Select
-              value={common.locationCity}
-              onValueChange={(v) => setCommon({ ...common, locationCity: v })}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {CITY_NAMES.map((c) => (
-                  <SelectItem key={c} value={c}>
-                    {c}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="flex w-full items-center justify-between rounded-md border border-input bg-surface-sunken px-3 py-2 text-sm shadow-sm">
+              <span className="truncate">{common.locationCity || "Select location..."}</span>
+              <Button type="button" variant="ghost" size="sm" className="h-6 px-2 text-amber hover:bg-amber/10 hover:text-amber" onClick={() => setPickerOpen("origin")}>
+                <MapPin className="mr-1 size-3" />
+                Pick
+              </Button>
+            </div>
           </div>
 
           {meta.hasDestination && (
             <div className="flex flex-col gap-1.5">
               <Label>Destination</Label>
-              <Select
-                value={common.destCity}
-                onValueChange={(v) => setCommon({ ...common, destCity: v })}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {CITY_NAMES.map((c) => (
-                    <SelectItem key={c} value={c}>
-                      {c}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="flex w-full items-center justify-between rounded-md border border-input bg-surface-sunken px-3 py-2 text-sm shadow-sm">
+                <span className="truncate">{common.destCity || "Select destination..."}</span>
+                <Button type="button" variant="ghost" size="sm" className="h-6 px-2 text-amber hover:bg-amber/10 hover:text-amber" onClick={() => setPickerOpen("dest")}>
+                  <MapPin className="mr-1 size-3" />
+                  Pick
+                </Button>
+              </div>
             </div>
           )}
         </div>
@@ -345,6 +339,23 @@ export function ListingForm({ initialType }: { initialType?: ListingType }) {
           Cancel
         </Button>
       </div>
+
+      {pickerOpen && (
+        <LocationPicker
+          isOpen={true}
+          onClose={() => setPickerOpen(null)}
+          initialLat={pickerOpen === "origin" ? common.locationLat : common.destLat}
+          initialLng={pickerOpen === "origin" ? common.locationLng : common.destLng}
+          initialCity={pickerOpen === "origin" ? common.locationCity : common.destCity}
+          onLocationSelect={(lat, lng, city) => {
+            if (pickerOpen === "origin") {
+              setCommon({ ...common, locationCity: city, locationLat: lat, locationLng: lng });
+            } else {
+              setCommon({ ...common, destCity: city, destLat: lat, destLng: lng });
+            }
+          }}
+        />
+      )}
     </form>
   );
 }

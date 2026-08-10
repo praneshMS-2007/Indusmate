@@ -20,7 +20,7 @@ export function BottomTabBar() {
 
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface-raised/95 backdrop-blur supports-[backdrop-filter]:bg-surface-raised/85 lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-sidebar-border bg-sidebar/95 text-sidebar-foreground backdrop-blur supports-[backdrop-filter]:bg-sidebar/85 lg:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       <ul className="grid grid-cols-5">
@@ -37,7 +37,7 @@ export function BottomTabBar() {
                   aria-hidden
                   className={cn(
                     "grid size-7 place-items-center rounded-md transition-colors",
-                    active ? "bg-amber text-on-amber" : "text-text-tertiary",
+                    active ? "bg-sidebar-primary text-sidebar-primary-foreground" : "text-sidebar-foreground/60",
                   )}
                 >
                   <Icon className="size-4" />
@@ -45,7 +45,7 @@ export function BottomTabBar() {
                 <span
                   className={cn(
                     "truncate text-[10px] leading-none font-medium",
-                    active ? "text-amber" : "text-text-tertiary",
+                    active ? "text-sidebar-primary" : "text-sidebar-foreground/60",
                   )}
                 >
                   {label}

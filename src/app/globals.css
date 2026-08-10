@@ -125,11 +125,11 @@
    `npm run check:contrast`, which checks this block independently of .dark.
    ============================================================================= */
 :root {
-  /* --- surfaces: white cards float on a pale blue-grey chassis --- */
-  --surface: #eef2fa; /* app chassis                */
-  --surface-raised: #ffffff; /* cards, panels — the floor    */
-  --surface-overlay: #ffffff; /* dialogs, dropdowns           */
-  --surface-sunken: #e4eaf5; /* wells, code, inputs          */
+  /* --- surfaces: light sandal cards float on a white chassis --- */
+  --surface: #ffffff; /* center background white */
+  --surface-raised: #f5eedc; /* floating bars light sandal */
+  --surface-overlay: #ffffff; /* dialogs, dropdowns */
+  --surface-sunken: #ebe2c9; /* wells, code, inputs */
 
   /* --- text: navy ink, not black --- */
   --text-primary: #0f1b2e;
@@ -204,13 +204,13 @@
   --chart-4: var(--warning);
   --chart-5: #2563eb;
 
-  --sidebar: var(--surface-raised);
-  --sidebar-foreground: var(--text-primary);
+  --sidebar: #2c1a14; /* dark brown colour */
+  --sidebar-foreground: #ffffff;
   --sidebar-primary: var(--amber);
   --sidebar-primary-foreground: var(--on-amber);
-  --sidebar-accent: #eaf0f9;
-  --sidebar-accent-foreground: var(--text-primary);
-  --sidebar-border: var(--border-subtle);
+  --sidebar-accent: #3e261d; /* lighter dark brown for hover */
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #1a0f0c; /* darkest brown border */
   --sidebar-ring: var(--amber);
 
   /* Minimum touch target. Thumbs in work gloves. */
@@ -408,6 +408,29 @@
     font-weight: 600;
     font-size: 0.6875rem;
     line-height: 1;
+    color: var(--text-tertiary);
+  }
+
+  .type-heading {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+    color: var(--text-primary);
+  }
+
+  .type-body {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--text-secondary);
+  }
+
+  .type-caption {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 0.75rem;
+    line-height: 1.33;
     color: var(--text-tertiary);
   }
 

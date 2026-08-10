@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { BadgeCheck, Star } from "lucide-react";
 
-import { getCurrentOrg, listDemoOrgs, toDemoOrgOption } from "@/lib/auth";
-import { AccountSwitcher } from "@/components/account-switcher";
+import { getCurrentOrg } from "@/lib/auth";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 /**
@@ -14,47 +13,50 @@ import { ThemeToggle } from "@/components/theme-toggle";
  * sidebar (which already carries it) is hidden.
  */
 export async function SiteHeader() {
-  const [current, orgs] = await Promise.all([getCurrentOrg(), listDemoOrgs()]);
+  const current = await getCurrentOrg();
 
   return (
-    <header className="sticky top-0 z-30 border-b border-line bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/80">
-      <div className="flex items-center gap-3 px-4 py-3 lg:px-6">
+    <header className="relative z-30 mx-4 mt-4 mb-4 lg:mx-6 lg:mb-6 rounded-xl bg-[#3E2723] text-white shadow-lg border border-[#4E3733]">
+      <div className="flex items-center justify-between lg:justify-evenly px-5 py-3.5">
+        
+        {/* Mobile Logo */}
         <Link href="/" className="flex shrink-0 items-center gap-2 lg:hidden">
           <span
             aria-hidden
-            className="type-display grid size-7 place-items-center rounded-sm bg-amber text-xs text-on-amber"
+            className="type-display grid size-8 place-items-center rounded-sm bg-amber text-sm text-on-amber"
           >
             IM
           </span>
         </Link>
 
-        <div className="ml-auto flex min-w-0 items-center gap-2">
-          {/* Current org's standing, always visible — reputation is the
-              currency that replaces identity while bidding is sealed. */}
-          <div className="hidden items-center gap-3 text-xs text-text-secondary md:flex">
-            {current.verified && (
-              <span className="flex items-center gap-1">
-                <BadgeCheck className="size-3.5 text-teal" />
-                KYC verified
-              </span>
-            )}
-            <span className="type-data flex items-center gap-1">
-              <Star className="size-3.5 fill-amber text-amber" />
-              {current.rating.toFixed(1)}
-              <span className="text-text-tertiary">· {current.dealCount} deals</span>
-            </span>
-          </div>
+        {/* Desktop: KYC verified */}
+        {current.verified ? (
+          <span className="hidden lg:flex items-center gap-2 font-medium text-white">
+            <BadgeCheck className="size-5" />
+            KYC verified
+          </span>
+        ) : (
+          <span className="hidden lg:block" />
+        )}
 
-          {/* The sidebar carries its own toggle at lg+; this one covers
-              every width the sidebar is hidden at. */}
+        {/* Desktop: Rating */}
+        <span className="hidden lg:flex type-data items-center gap-2 text-white">
+          <Star className="size-5 fill-amber-400 text-amber-400" />
+          <span className="text-base font-semibold">{current.rating.toFixed(1)}</span>
+          <span className="text-white ml-1">· {current.dealCount} deals</span>
+        </span>
+
+        {/* Both: Right side (Theme toggle on mobile + Company Name) */}
+        <div className="flex items-center gap-4 text-right">
           <div className="lg:hidden">
             <ThemeToggle collapsed />
           </div>
-
-          {/* Narrowed before it crosses into a client component. The full
-              row stays on the server. */}
-          <AccountSwitcher current={toDemoOrgOption(current)} orgs={orgs} />
+          <div className="flex flex-col">
+            <span className="text-sm font-semibold tracking-wide text-white">{current.name}</span>
+            <span className="type-caption text-white">{current.type}</span>
+          </div>
         </div>
+        
       </div>
     </header>
   );

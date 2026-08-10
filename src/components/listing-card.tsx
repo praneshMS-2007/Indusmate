@@ -52,26 +52,28 @@ export function ListingCard({ listing, bidCount }: { listing: Listing; bidCount:
         </Badge>
       </div>
 
-      <h3 className="leading-snug font-medium">{listing.title}</h3>
+      <div className="flex flex-col gap-2.5 rounded-md border border-line-subtle bg-surface p-3 shadow-sm">
+        <h3 className="type-heading text-base leading-snug">{listing.title}</h3>
 
-      <dl className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-xs text-text-secondary">
-        <div className="col-span-2 flex items-center gap-1.5">
-          <MapPin className="size-3.5 shrink-0" />
-          <span className="truncate">
-            {listing.locationCity}
-            {listing.destCity && ` → ${listing.destCity}`}
-          </span>
-        </div>
-        <div className="type-data flex items-center gap-1.5">
-          <Clock className="size-3.5 shrink-0" />
-          {formatWindow(listing.windowStart, listing.windowEnd)}
-        </div>
-        <div className="flex items-center gap-1.5">
-          <Gavel className="size-3.5 shrink-0" />
-          <span className="type-data">{bidCount}</span>
-          {bidCount === 1 ? "sealed bid" : "sealed bids"}
-        </div>
-      </dl>
+        <dl className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-xs text-text-secondary">
+          <div className="col-span-2 flex items-center gap-1.5">
+            <MapPin className="size-3.5 shrink-0" />
+            <span className="truncate">
+              {listing.locationCity}
+              {listing.destCity && ` → ${listing.destCity}`}
+            </span>
+          </div>
+          <div className="type-data flex items-center gap-1.5">
+            <Clock className="size-3.5 shrink-0" />
+            {formatWindow(listing.windowStart, listing.windowEnd)}
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Gavel className="size-3.5 shrink-0" />
+            <span className="type-data">{bidCount}</span>
+            {bidCount === 1 ? "sealed bid" : "sealed bids"}
+          </div>
+        </dl>
+      </div>
 
       <div className="mt-auto flex items-end justify-between gap-2 border-t border-line-subtle pt-3">
         <div>

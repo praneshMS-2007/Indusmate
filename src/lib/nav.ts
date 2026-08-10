@@ -1,4 +1,4 @@
-import { Compass, Gavel, Handshake, Map, Package } from "lucide-react";
+import { Compass, Gavel, Handshake, Map, Package, User, UserPen, HelpCircle, LogOut, Settings, LayoutDashboard } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 export interface NavItem {
@@ -14,9 +14,16 @@ export interface NavItem {
  * their own copy — a sixth destination gets added once, not twice.
  */
 export const NAV_ITEMS: readonly NavItem[] = [
+  { href: "/", label: "Dashboard", icon: LayoutDashboard },
   { href: "/browse", label: "Browse", icon: Compass },
   { href: "/map", label: "Map", icon: Map },
   { href: "/my/listings", label: "My listings", icon: Package },
   { href: "/my/bids", label: "My bids", icon: Gavel },
   { href: "/deals", label: "Deals", icon: Handshake },
 ];
+
+export const SETTINGS_ITEM: NavItem = { 
+  href: "/settings", 
+  label: "Settings", 
+  icon: Settings 
+};

@@ -38,15 +38,15 @@ export async function POST(request: Request) {
   const description = String(body.description ?? "").trim();
   if (!title) return NextResponse.json({ error: "title is required" }, { status: 400 });
 
-  const locationCity = body.locationCity;
-  if (!isCity(locationCity)) {
-    return NextResponse.json({ error: "locationCity is not a known city" }, { status: 400 });
+  const locationCity = String(body.locationCity ?? "").trim();
+  if (!locationCity) {
+    return NextResponse.json({ error: "locationCity is required" }, { status: 400 });
   }
 
   // Freight is the only market with a destination.
-  const destCity = body.destCity;
+  const destCity = body.destCity ? String(body.destCity).trim() : null;
   if (meta.hasDestination) {
-    if (!isCity(destCity)) {
+    if (!destCity) {
       return NextResponse.json(
         { error: "destCity is required for freight listings" },
         { status: 400 },
@@ -99,8 +99,12 @@ export async function POST(request: Request) {
     );
   }
 
-  const origin = cityCoords(locationCity);
-  const dest = meta.hasDestination && isCity(destCity) ? cityCoords(destCity) : null;
+  // Read exact coordinates from the payload instead of looking up by city name
+  const locationLat = Number(body.locationLat) || 28.6139;
+  const locationLng = Number(body.locationLng) || 77.2090;
+  
+  const destLat = destCity && Number(body.destLat) ? Number(body.destLat) : null;
+  const destLng = destCity && Number(body.destLng) ? Number(body.destLng) : null;
 
   const direction =
     body.direction === "REVERSE" || body.direction === "FORWARD"
@@ -117,11 +121,11 @@ export async function POST(request: Request) {
       status: "OPEN",
       spec: spec as object,
       locationCity,
-      locationLat: origin.lat,
-      locationLng: origin.lng,
-      destCity: dest ? (destCity as string) : null,
-      destLat: dest?.lat ?? null,
-      destLng: dest?.lng ?? null,
+      locationLat,
+      locationLng,
+      destCity: destCity,
+      destLat,
+      destLng,
       windowStart,
       windowEnd,
       quantity,

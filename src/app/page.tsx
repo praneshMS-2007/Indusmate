@@ -69,7 +69,7 @@ export default async function Home() {
   const SecondaryIcon = role.secondary.icon;
 
   return (
-    <main className="flex flex-col gap-4 lg:gap-5">
+    <main className="flex flex-col gap-6 lg:gap-8">
       {/* ---- Identity strip: who you are, what you do here ---------------- */}
       <header className="elevated-flat flex flex-col gap-4 rounded-md border border-line bg-surface-raised p-4 sm:p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
@@ -81,8 +81,8 @@ export default async function Home() {
               <p className="type-eyebrow">
                 {role.label} · {org.city}
               </p>
-              <h1 className="type-display truncate text-xl sm:text-2xl">{org.name}</h1>
-              <p className="mt-0.5 text-sm text-text-secondary">{role.tagline}</p>
+              <h1 className="type-heading truncate text-2xl sm:text-3xl">{org.name}</h1>
+              <p className="type-body mt-0.5 text-sm">{role.tagline}</p>
             </div>
           </div>
 
@@ -103,7 +103,7 @@ export default async function Home() {
         </div>
 
         {/* The one line that proves four businesses share one engine. */}
-        <p className="flex items-start gap-2 border-t border-line-subtle pt-3 text-xs text-text-secondary">
+        <p className="type-caption flex items-start gap-2 border-t border-line-subtle pt-3">
           <Repeat className="mt-0.5 size-3.5 shrink-0 text-text-tertiary" aria-hidden />
           <span>
             <span className="text-foreground">{role.posture}</span> Same listing table, same deal
@@ -160,11 +160,11 @@ export default async function Home() {
       {/* ---- The thesis, stated once ------------------------------------- */}
       <section className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div className="elevated-flat rounded-md border border-masked/30 bg-masked-muted/30 p-4">
-          <h2 className="flex items-center gap-2 text-sm font-semibold">
+          <h2 className="type-heading flex items-center gap-2 text-base">
             <Lock className="size-4 text-masked" aria-hidden />
             Bidding here is sealed
           </h2>
-          <p className="mt-1 text-sm text-text-secondary">
+          <p className="type-body mt-1 text-sm">
             No bidder sees another bidder&apos;s number. Owners see reputation without identity —
             a handle, a rating, a completion record. Names, contacts and GSTIN are released to
             both sides only once a deal is accepted.
@@ -174,11 +174,11 @@ export default async function Home() {
           href="/browse"
           className="elevated group flex flex-col rounded-md border border-line bg-surface-raised p-4 transition-colors hover:border-amber/50"
         >
-          <h2 className="flex items-center gap-2 text-sm font-semibold">
+          <h2 className="type-heading flex items-center gap-2 text-base">
             <Layers className="size-4 text-amber" aria-hidden />
             One engine, five markets
           </h2>
-          <p className="mt-1 text-sm text-text-secondary">
+          <p className="type-body mt-1 text-sm">
             Raw materials, byproducts, equipment, labour and freight are one table with one deal
             state machine. Your dashboard is arranged for a {role.label.toLowerCase()} — the
             engine underneath is the same one everyone else uses.
