@@ -18,13 +18,13 @@ export default async function LoginPage() {
           <div className="mx-auto w-full max-w-sm">
             <div className="mb-8 flex flex-col gap-2">
               <div className="flex items-center gap-3">
-                <Image
+                {/* Standard HTML img tag to ensure zero Next.js Image wrapper interference */}
+                <img
                   src="/logo.png"
                   alt="IndusMate Logo"
-                  width={96}
-                  height={96}
-                  unoptimized
-                  className="rounded-2xl shadow-lg"
+                  width={64}
+                  height={64}
+                  className="size-16 rounded-2xl object-contain bg-surface-raised p-1 shadow-md border border-line"
                 />
                 <span className="type-display text-5xl tracking-tight text-text-primary font-bold">
                   IndusMate

@@ -19,13 +19,12 @@ export function AppSidebar() {
   return (
     <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground lg:flex">
       <Link href="/" className="flex items-center gap-3.5 px-5 py-5 mb-4 mt-2">
-        <Image 
+        <img 
           src="/logo.png" 
           alt="IndusMate Logo" 
-          width={56} 
-          height={56} 
-          unoptimized
-          className="rounded-lg object-cover shadow-e1 ring-1 ring-white/10" 
+          width={48} 
+          height={48} 
+          className="size-12 rounded-lg object-contain bg-surface-raised p-1 shadow-e1 ring-1 ring-white/10" 
         />
         <span className="type-display text-2xl font-bold tracking-tight">IndusMate</span>
       </Link>
