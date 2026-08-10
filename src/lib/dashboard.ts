@@ -15,6 +15,7 @@
  * filtering after the fact.
  */
 
+import { cache } from "react";
 import type { Organisation } from "@prisma/client";
 
 import { prisma } from "./prisma";
@@ -78,7 +79,7 @@ export interface DashboardData {
 
 const TERMINAL_STATES = ["REJECTED", "CANCELLED", "EXPIRED", "RATED"];
 
-export async function getDashboardData(org: Organisation): Promise<DashboardData> {
+export const getDashboardData = cache(async (org: Organisation): Promise<DashboardData> => {
   const homeMarkets = ROLE_META[org.type].homeMarkets;
 
   const [ownListings, ownBids, feedListings, deals] = await Promise.all([
@@ -188,4 +189,4 @@ export async function getDashboardData(org: Organisation): Promise<DashboardData
   };
 
   return { myListings, myBids, marketFeed, activeDeals, kpis };
-}
+});

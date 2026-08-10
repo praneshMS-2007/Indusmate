@@ -7,8 +7,7 @@ import { BottomTabBar } from "@/components/bottom-tab-bar";
 import { SiteHeader } from "@/components/site-header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
-import { auth } from "@/auth";
-import { getCurrentOrg } from "@/lib/auth";
+import { getSession, getCurrentOrg } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -59,7 +58,7 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const session = await auth();
+  const session = await getSession();
   const hasOrg = !!session?.user && !!(session.user as any).orgId;
 
   let org = null;

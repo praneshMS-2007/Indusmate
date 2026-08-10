@@ -1,3 +1,4 @@
+import { cache } from "react";
 import type { AuctionDirection, Deal, Listing, Organisation } from "@prisma/client";
 
 import { prisma } from "./prisma";
@@ -22,23 +23,23 @@ export interface ListingBidView {
   totalBids: number;
 }
 
-export async function getListingBidView(
+export const getListingBidView = cache(async (
   listingId: string,
   viewerOrgId: string,
-): Promise<ListingBidView | null> {
-  const listing = await prisma.listing.findUnique({
-    where: { id: listingId },
-    include: { ownerOrg: true },
-  });
-  if (!listing) return null;
-
-  const [rawBids, deal] = await Promise.all([
+): Promise<ListingBidView | null> => {
+  const [listing, rawBids, deal] = await Promise.all([
+    prisma.listing.findUnique({
+      where: { id: listingId },
+      include: { ownerOrg: true },
+    }),
     prisma.bid.findMany({
       where: { listingId },
       include: { bidderOrg: true },
     }),
     prisma.deal.findFirst({ where: { listingId } }),
   ]);
+
+  if (!listing) return null;
 
   const bids = maskBids(rawBids, viewerOrgId, {
     ownerOrgId: listing.ownerOrgId,
@@ -57,10 +58,10 @@ export async function getListingBidView(
     // bids" even though a bidder can only see their own.
     totalBids: rawBids.length,
   };
-}
+});
 
 /** Deals the viewer is party to, newest first. */
-export async function getDealsForOrg(orgId: string) {
+export const getDealsForOrg = cache(async (orgId: string) => {
   return prisma.deal.findMany({
     where: { OR: [{ buyerOrgId: orgId }, { sellerOrgId: orgId }] },
     include: {
@@ -72,7 +73,7 @@ export async function getDealsForOrg(orgId: string) {
     },
     orderBy: { updatedAt: "desc" },
   });
-}
+});
 
 /**
  * Bids the viewer has placed, with the listing they were placed on.
@@ -81,7 +82,7 @@ export async function getDealsForOrg(orgId: string) {
  * of anyone else's to mask. The counterparty on each listing is its owner,
  * who is public.
  */
-export async function getBidsForOrg(orgId: string) {
+export const getBidsForOrg = cache(async (orgId: string) => {
   return prisma.bid.findMany({
     where: { bidderOrgId: orgId },
     include: {
@@ -89,4 +90,4 @@ export async function getBidsForOrg(orgId: string) {
     },
     orderBy: { updatedAt: "desc" },
   });
-}
+});

@@ -21,10 +21,15 @@ import { auth } from "@/auth";
  * THE authorisation source of truth. Never accept an org id from a request
  * body or query string in its place.
  */
+import { cache } from "react";
 import { redirect } from "next/navigation";
 
-export async function getCurrentOrg(): Promise<Organisation> {
-  const session = await auth();
+export const getSession = cache(async () => {
+  return auth();
+});
+
+export const getCurrentOrg = cache(async (): Promise<Organisation> => {
+  const session = await getSession();
   
   if (!session?.user) {
     redirect("/login");
@@ -50,7 +55,7 @@ export async function getCurrentOrg(): Promise<Organisation> {
     console.error("[AUTH] Database query error in getCurrentOrg:", e);
     redirect("/login");
   }
-}
+});
 
 
 /**
