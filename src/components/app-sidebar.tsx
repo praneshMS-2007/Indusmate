@@ -24,6 +24,7 @@ export function AppSidebar() {
           alt="IndusMate Logo" 
           width={56} 
           height={56} 
+          unoptimized
           className="rounded-lg object-cover shadow-e1 ring-1 ring-white/10" 
         />
         <span className="type-display text-2xl font-bold tracking-tight">IndusMate</span>

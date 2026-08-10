@@ -23,6 +23,7 @@ export default async function LoginPage() {
                   alt="IndusMate Logo"
                   width={96}
                   height={96}
+                  unoptimized
                   className="rounded-2xl shadow-lg"
                 />
                 <span className="type-display text-5xl tracking-tight text-text-primary font-bold">
@@ -62,6 +63,7 @@ export default async function LoginPage() {
           alt="Industrial B2B Network"
           fill
           priority
+          unoptimized
           className="object-cover opacity-80 mix-blend-screen"
         />
         {/* Subtle gradient overlay to make text pop */}
