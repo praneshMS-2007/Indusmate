@@ -13,7 +13,6 @@ Built for **HackMatrix 2K26 — IEEE Computer Society SBC, MITS Gwalior**.
 | **Demo Video (Drive)** | [Google Drive Demo Folder](https://drive.google.com/drive/folders/1uNk-gQDxbypHJ-23VQl4YRwfi5fk1_gH) |
 | **Presentation Deck** | [Canva Presentation Deck](https://canva.link/rbn90jqm4jr5e5m) |
 | **Submission Documentation** | [`HACKMATRIX_PROJECT_DOCUMENTATION.md`](./HACKMATRIX_PROJECT_DOCUMENTATION.md) |
-| **Demo Script** | [`DEMO.md`](./DEMO.md) — under 4 minutes, step-by-step walkthrough |
 
 ---
 
