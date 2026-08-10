@@ -1,8 +1,9 @@
 import { getCurrentOrg } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { headers } from "next/headers";
 import { LogoutButton } from "@/components/logout-button";
-import { ShieldCheck, Users, LogOut, FileText } from "lucide-react";
+import { ShieldCheck, Users, LogOut, FileText, History } from "lucide-react";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   let org;
@@ -17,6 +18,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     redirect("/");
   }
 
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname") || "";
+
+  const isKycActive = pathname === "/admin/kyc" || pathname === "/admin";
+  const isLogsActive = pathname === "/admin/logs";
+
   return (
     <div className="flex min-h-screen bg-surface">
       {/* Admin Sidebar */}
@@ -30,10 +37,29 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           </Link>
         </div>
         
-        <nav className="flex-1 px-4 py-2">
-          <Link href="/admin/kyc" className="flex items-center gap-3 rounded-md bg-sidebar-accent px-3 py-2 text-sm font-medium text-sidebar-accent-foreground">
+        <nav className="flex-1 px-4 py-2 flex flex-col gap-1">
+          <Link 
+            href="/admin/kyc" 
+            className={`flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors ${
+              isKycActive 
+                ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold" 
+                : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+            }`}
+          >
             <ShieldCheck className="size-4" />
             KYC Verification
+          </Link>
+
+          <Link 
+            href="/admin/logs" 
+            className={`flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors ${
+              isLogsActive 
+                ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold" 
+                : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+            }`}
+          >
+            <History className="size-4" />
+            Verification Logs
           </Link>
         </nav>
         

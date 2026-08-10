@@ -19,4 +19,5 @@ export async function processKyc(orgId: string, status: "APPROVED" | "REJECTED")
   });
 
   revalidatePath("/admin/kyc");
+  revalidatePath("/admin/logs");
 }

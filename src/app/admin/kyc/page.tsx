@@ -3,6 +3,9 @@ import { BadgeCheck, FileText, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { processKyc } from "./actions";
 
+import Link from "next/link";
+import { History } from "lucide-react";
+
 export default async function AdminKycPage() {
   const pendingOrgs = await prisma.organisation.findMany({
     where: { kycStatus: "UNDER_REVIEW" },
@@ -12,16 +15,29 @@ export default async function AdminKycPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="type-display text-3xl font-bold">KYC Verification Queue</h1>
-        <p className="text-text-secondary mt-1">Review and approve documents for new organisations.</p>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="type-display text-3xl font-bold">KYC Verification Queue</h1>
+          <p className="text-text-secondary mt-1">Review and approve documents for new organisations ({pendingOrgs.length} pending).</p>
+        </div>
+        <Link href="/admin/logs">
+          <Button variant="outline" size="sm" className="gap-2">
+            <History className="size-4" />
+            View Verification Logs
+          </Button>
+        </Link>
       </div>
 
       {pendingOrgs.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-line p-12 text-center text-text-tertiary">
-          <BadgeCheck className="mb-4 size-12 opacity-50" />
+          <BadgeCheck className="mb-4 size-12 opacity-50 text-teal" />
           <p className="font-medium text-text-primary">No pending verifications</p>
           <p className="mt-1 text-sm">All caught up! New users will appear here when they upload their documents.</p>
+          <Link href="/admin/logs" className="mt-4">
+            <Button variant="outline" size="sm" className="gap-1.5">
+              <History className="size-4" /> See Past Verification Logs &rarr;
+            </Button>
+          </Link>
         </div>
       ) : (
         <div className="grid gap-6">
