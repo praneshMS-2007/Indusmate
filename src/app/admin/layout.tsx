@@ -9,6 +9,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   try {
     org = await getCurrentOrg();
   } catch (e) {
+    if ((e as any)?.digest?.startsWith("NEXT_REDIRECT")) throw e;
     redirect("/login");
   }
 

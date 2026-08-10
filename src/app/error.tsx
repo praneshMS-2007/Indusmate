@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
  * digest is enough to find the real error in the server logs, and a wall of
  * JavaScript on a projector helps nobody.
  */
-export default function GlobalError({
+export default function ErrorPage({
   error,
   reset,
 }: {
@@ -27,8 +27,8 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <main className="mx-auto flex max-w-md flex-col items-center gap-4 py-20 text-center">
-      <AlertTriangle className="size-9 text-warning" />
+    <div className="mx-auto flex max-w-md flex-col items-center gap-4 py-20 text-center">
+      <AlertTriangle className="size-9 text-amber" />
 
       <div>
         <h1 className="type-display text-2xl">That didn&apos;t load</h1>
@@ -40,7 +40,7 @@ export default function GlobalError({
 
       <div className="flex flex-wrap justify-center gap-2">
         <Button onClick={reset}>
-          <RotateCcw />
+          <RotateCcw className="size-4 mr-2" />
           Try again
         </Button>
         <Button asChild variant="outline">
@@ -53,6 +53,6 @@ export default function GlobalError({
           Reference {error.digest} — quote this if you report it.
         </p>
       )}
-    </main>
+    </div>
   );
 }

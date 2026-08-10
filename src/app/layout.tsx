@@ -66,7 +66,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   if (hasOrg) {
     try {
       org = await getCurrentOrg();
-    } catch (e) {}
+    } catch (e) {
+      if ((e as any)?.digest?.startsWith("NEXT_REDIRECT")) throw e;
+    }
   }
 
   const headersList = await headers();
