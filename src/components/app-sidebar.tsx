@@ -20,7 +20,7 @@ export function AppSidebar() {
     <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground lg:flex">
       <Link href="/" className="flex items-center gap-3.5 px-5 py-5 mb-4 mt-2">
         <img 
-          src="/logo.png" 
+          src="/logo.webp" 
           alt="IndusMate Logo" 
           width={48} 
           height={48} 

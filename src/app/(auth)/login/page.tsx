@@ -20,7 +20,7 @@ export default async function LoginPage() {
               <div className="flex items-center gap-3">
                 {/* Standard HTML img tag to ensure zero Next.js Image wrapper interference */}
                 <img
-                  src="/logo.png"
+                  src="/logo.webp"
                   alt="IndusMate Logo"
                   width={64}
                   height={64}
@@ -59,7 +59,7 @@ export default async function LoginPage() {
       {/* RIGHT SIDE: Hero Image */}
       <div className="relative hidden w-1/2 flex-col justify-end bg-sidebar lg:flex overflow-hidden">
         <Image
-          src="/login-bg.png"
+          src="/login-bg.webp"
           alt="Industrial B2B Network"
           fill
           priority
