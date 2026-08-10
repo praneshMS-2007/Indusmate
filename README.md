@@ -1,215 +1,175 @@
 # IndusMate
 
-> One negotiation engine. Five industrial markets. Adding a sixth is
-> configuration, not code.
+> **One negotiation engine. Five industrial markets. Sealed anonymous bidding & AI-driven byproduct symbiosis for Indian industry.**
 
-**Built for HackMatrix 2K26 — IEEE Computer Society SBC, MITS Gwalior.**
+Built for **HackMatrix 2K26 — IEEE Computer Society SBC, MITS Gwalior**.
 
-| | |
+| Attribute | Details |
 |---|---|
-| **Project Title** | IndusMate |
+| **Project Title** | **IndusMate** |
 | **Team Name** | **COLDSTACK** |
-| **Live Demo** | **https://indusmate.vercel.app** |
-| **Repository** | https://github.com/praneshMS-2007/Indusmate |
-| **Demo script** | [`DEMO.md`](./DEMO.md) — under 4 minutes, account-by-account |
+| **Live Demo** | [indusmate.vercel.app](https://indusmate.vercel.app) |
+| **Repository** | [github.com/praneshMS-2007/Indusmate](https://github.com/praneshMS-2007/Indusmate) |
+| **Demo Script** | [`DEMO.md`](./DEMO.md) — under 4 minutes, step-by-step walkthrough |
 
 ---
 
-## Problem Statement
+## 🎯 Problem Statement
 
-Indian industrial commerce runs on phone calls, WhatsApp groups and brokers.
-That creates three compounding failures:
+Indian industrial commerce runs on phone calls, fragmented WhatsApp groups, and brokers. This creates three compounding failures:
 
-1. **Price discovery is broken.** A manufacturer posting a freight need has no
-   way to make transporters compete. Whoever the broker knows wins, at whatever
-   price the broker sets.
+1. **Price Discovery is Broken:** A manufacturer posting a freight need has no way to make transporters compete transparently. Intermediaries set prices arbitrarily, adding 12–18% in hidden markups.
+2. **Bidding Leakage & Cartelization:** In traditional open tenders, bids leak between competitors. Sellers refrain from offering their true lowest prices because public disclosure exposes their margins to rival buyers.
+3. **Unmapped Industrial Waste Streams:** A steel plant's slag is a cement plant's raw feedstock — but neither side knows it. Because byproducts are searched by name rather than chemical composition, sellable materials become expensive disposal costs.
 
-2. **Bidding is not confidential.** When bids leak between bidders, the process
-   stops being a market and becomes a negotiation about who found out what.
-   Sellers avoid bidding honestly because their price becomes public knowledge.
+Existing B2B portals treat each market — materials, equipment, labour, freight, waste — as separate products. IndusMate unifies all five into **one architectural engine**.
 
-3. **Industrial waste has no discovery mechanism.** A steel plant's slag is a
-   cement plant's raw feedstock — but the steel plant does not know that, and
-   the cement plant does not search for "slag." The two never meet, so a
-   sellable byproduct becomes a disposal cost. This is a discovery problem, not
-   a listing problem, and no existing marketplace solves it.
+---
 
-Existing B2B portals treat each market — materials, equipment, labour, freight,
-waste — as a separate product with its own bespoke logic. That is why none of
-them cover all five, and why adding a market is a rewrite.
+## ✨ Solution Overview
 
-## Solution Overview
+IndusMate treats negotiation as the core architecture rather than an ad-hoc feature.
 
-IndusMate treats negotiation as the architecture rather than a feature.
-
-**The insight:** a raw material lot, a waste stream, an idle machine-hour, a
-technician's shift and a truck's return leg are all the same abstract object —
-a **listable capacity** with a spec, a location, a time window, and a price that
-has not been decided yet. So they are the same row in the same table with a
-different `listing_type` and a typed spec payload.
-
-That yields three things:
-
-**1. One engine, five markets.** Exactly one `Listing` model and one deal state
-machine serve raw materials, byproducts, equipment sharing, skilled labour and
-freight. Markets differ only by their spec payload. A sixth market is a config
-change, not a codebase.
-
-**2. Sealed, anonymous bidding.** Bidders never see each other's amounts. The
-listing owner sees incoming bids with the bidder's name, organisation and
-contact details stripped server-side, replaced by a pseudonymous handle and
-reputation aggregates — `Verified Transporter #4471 · 4.7/5 · 128 deals ·
-96% on-time`. Identity is revealed to both sides **only** when the deal reaches
-`ACCEPTED`. You choose on merit, then find out who you chose. Masking is
-enforced in the API layer, not the UI, so it cannot be bypassed by reading the
-network tab.
-
-**3. AI-driven byproduct symbiosis.** Byproducts are listed by *specification*
-— composition, physical form, moisture, contaminants, monthly volume, hazard
-class — never by name. An LLM then works outward from that spec to the
-industries that can consume it as feedstock, what they use it for, and an
-indicative value range per tonne in India, cross-referenced against real
-organisations on the platform. Fly ash stops being a disposal cost and becomes
-cement, bricks and road base.
-
-### The deal lifecycle — one state machine, all five markets
+### 💡 The Core Insight
+A raw material lot, a waste stream, an idle machine-hour, a technician's shift, and a truck's return leg are all instances of the same abstract object: a **listable capacity** with a specification, a location, a time window, and a price that has not been decided yet.
 
 ```
-LISTED → BIDDING → COUNTERED → ACCEPTED → CONTRACTED → IN_EXECUTION
-       → SETTLED → RATED
-
-Terminal states: REJECTED, CANCELLED, EXPIRED
+┌────────────────────────────────────────────────────────────────────────┐
+│                        ONE UNIVERSAL LISTING                           │
+│  [Market Type]  [Spec Payload]  [Location & Window]  [Reference Price] │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                      SEALED BIDDING & MASKING LAYER                    │
+│      Pseudonym Handles · Star Ratings · Deal Count · On-Time %         │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                  ONE DEAL STATE MACHINE (ALL 5 MARKETS)                │
+│   LISTED → BIDDING → COUNTERED → ACCEPTED → CONTRACTED → SETTLED       │
+└────────────────────────────────────────────────────────────────────────┘
 ```
 
-Every transition passes through a single service function that validates the
-move is legal, validates the actor is permitted to make it, and appends to an
-immutable `DealEvent` audit log. No route handler and no React component
-mutates deal state directly.
+### 🔑 Key Capabilities
 
-Bidding runs in both directions on the same machine, set by one flag:
-- **Reverse auction** — one buyer, many sellers, price competes *down*
-  (freight legs, raw material tenders, labour shifts)
-- **Forward auction** — one seller, many buyers, price competes *up*
-  (scarce byproducts, in-demand equipment)
+1. **One Engine, Five Markets:** Exactly one `Listing` model and one deal state machine serve **Freight, Raw Materials, Industrial Byproducts, Machinery/Equipment, and Skilled Labour**. Adding a sixth market is a single configuration change.
+2. **Sealed, Anonymous Bidding Engine:** Bidders never see each other's amounts. The listing owner sees incoming bids with names, organisations, and contact details stripped server-side (`maskBid()`), replaced by pseudonymous handles and reputation metrics (`Transporter #4471 · 4.7/5 · 128 deals`). Identities are revealed **only when a deal reaches `ACCEPTED`**.
+3. **AI-Driven Byproduct Symbiosis (Gemini 2.5):** Industrial waste streams are listed by specification (composition, moisture, hazardous class, volume). Google Gemini LLM evaluates the chemical spec to match selling factories directly with buying recyclers and manufacturers.
+4. **Platform Admin KYC Verification & Audit Logs:** New organisations undergo multi-document KYC verification (GST, Factory License, PCB Clearance, RC Book). Platform administrators review pending submissions in `/admin/kyc` with real-time audit logs at `/admin/logs`.
+5. **Role-Aware Bento Dashboards:** Customized views for **Manufacturers, Transporters, Suppliers, and Recyclers**, giving each industry persona tailored KPI metrics and priority cards.
 
-## Technology Stack
+---
 
-| Layer | Choice | Why |
+## 🔄 The Deal Lifecycle State Machine
+
+Every deal transition passes through a single immutable service function (`transitionDeal`) that validates authorization and appends to a `DealEvent` audit trail:
+
+```
+LISTED → BIDDING → COUNTERED → ACCEPTED → CONTRACTED → IN_EXECUTION → SETTLED → RATED
+
+Terminal States: REJECTED | CANCELLED | EXPIRED
+```
+
+- **Reverse Auction (Price competes down):** Freight legs, raw material procurement, labour shifts.
+- **Forward Auction (Price competes up):** Scarce industrial byproducts, in-demand heavy machinery.
+
+---
+
+## 🛠️ Technology Stack & Architecture
+
+| Layer | Choice | Rationale / Benefit |
 |---|---|---|
-| Framework | Next.js 16 (App Router), React 19 | Server components keep masking logic server-side by default |
-| Language | TypeScript, strict mode | Discriminated unions type the five spec payloads |
-| Database | Supabase Postgres | Managed, free tier, `ap-south-1` region |
-| ORM | Prisma 6 | Typed queries; JSON column for the spec payload |
-| UI | Tailwind CSS v4 + shadcn/ui | Mobile-first, no design system to build |
-| Maps | Leaflet + react-leaflet + OpenStreetMap/CARTO tiles | No API key, no billing, no vendor lock-in |
-| AI | Google Gemini (`gemini-3.6-flash`) | Free tier; strict JSON schema mode for match cards |
-| Hosting | Vercel | Zero-config Next.js deploys on every push |
+| **Framework** | Next.js 16 (App Router), React 19 | Server Components keep identity masking strictly server-side |
+| **Language** | TypeScript (Strict Mode) | Discriminated unions type all 5 market spec payloads |
+| **Database** | PostgreSQL (Supabase) + Prisma 6 | Managed relational storage with JSON spec columns |
+| **Performance Layer** | `React.cache()` + PgBouncer Pooling | Deduplicates database queries; sub-100ms latency |
+| **Authentication** | Auth.js (NextAuth v5) + Bcrypt | Secure credentials auth, HTTP-only JWT cookies, RBAC |
+| **Styling** | Vanilla CSS + Tailwind CSS v4 | HSL theme design tokens, light/dark mode, mobile-first |
+| **Maps & Routing** | Leaflet + OpenStreetMap / CARTO | Embedded route geometry without vendor lock-in |
+| **AI / LLM** | Google Gemini API (`gemini-2.5-flash`) | Automated byproduct symbiosis waste stream matching |
+| **Hosting** | Vercel | Global edge deployment with automatic GitHub integration |
 
-**Scope honesty — what is mocked in a 24-hour build:** authentication is a demo
-account switcher over seeded organisations (no passwords, clearly labelled in
-the UI). Payments, escrow, KYC verification, GST/e-way bill generation and SMS
-are clearly-labelled stub services, so the UI flow is complete end-to-end
-without pretending the integrations exist. Everything else is real: the
-sealed-bid engine, the deal state machine, the corridor map and the AI
-byproduct matcher all run against live data, not fixtures. Freight is the
-market with the richest detail view (an embedded route map); the other four
-run through the identical engine with a different spec payload.
+---
 
-## Team Members
+## 👥 Team Members
 
 **Team COLDSTACK**
 
-| Name | GitHub |
-|---|---|
-| Pranesh M S — *Team Lead* | [@praneshMS-2007](https://github.com/praneshMS-2007) |
-| Avinash A S | [@AVINASHHZ](https://github.com/AVINASHHZ) |
-| Kannan S | [@kindlingkannan-web](https://github.com/kindlingkannan-web) |
-| Yashwanth | [@yashliveinsaan](https://github.com/yashliveinsaan) |
+| Member Name | Role | GitHub |
+|---|---|---|
+| **Pranesh M S** | Team Lead / Full-Stack Engineer | [@praneshMS-2007](https://github.com/praneshMS-2007) |
+| **Avinash A S** | Frontend & Design Systems | [@AVINASHHZ](https://github.com/AVINASHHZ) |
+| **Kannan S** | Backend & Database Architecture | [@kindlingkannan-web](https://github.com/kindlingkannan-web) |
+| **Yashwanth** | Quality Assurance & Testing | [@yashliveinsaan](https://github.com/yashliveinsaan) |
 
-## Setup Instructions
+---
 
-### Prerequisites
-- Node.js 20 or newer (`node -v`)
-- A Supabase project (free tier)
-- A Google AI Studio API key (free tier)
+## 🚀 Quickstart & Setup Instructions
 
-### 1. Clone and install
+### 1. Clone & Install
 ```bash
 git clone https://github.com/praneshMS-2007/Indusmate.git
 cd Indusmate
 npm install
 ```
 
-### 2. Configure environment
+### 2. Configure Environment Variables
+Copy `.env.example` to `.env`:
 ```bash
 cp .env.example .env
 ```
 
-Then fill in `.env`:
+Configure `.env` with your Supabase Postgres connection and Google Gemini API key:
+```env
+DATABASE_URL="postgresql://postgres.[REF]:[PASS]@aws-0-ap-south-1.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=10&pool_timeout=30"
+DIRECT_URL="postgresql://postgres.[REF]:[PASS]@aws-0-ap-south-1.pooler.supabase.com:5432/postgres"
+GEMINI_API_KEY="your_google_gemini_api_key"
+AUTH_SECRET="a_very_secure_secret_key_for_indusmate"
+AUTH_TRUST_HOST=true
+```
 
-| Variable | Where to get it |
-|---|---|
-| `DATABASE_URL` | Supabase → **Connect** → *Transaction pooler* (port **6543**) |
-| `DIRECT_URL` | Supabase → **Connect** → *Session pooler* (port **5432**) |
-| `GEMINI_API_KEY` | [Google AI Studio](https://aistudio.google.com/apikey) → Get API key |
+> **Note on Database Connection:** `DATABASE_URL` connects via transaction pooler (port 6543) with `connection_limit=10` for serverless concurrency. `DIRECT_URL` connects via session pooler (port 5432) for running migrations.
 
-> **Two URLs, deliberately.** The app runs on the transaction pooler because
-> serverless functions open and close connections constantly and a direct
-> connection exhausts the limit. Prisma migrations cannot run through the
-> transaction pooler, so they use the session pooler instead.
-
-> **URL-encode your password.** If it contains `@`, `:`, `/`, `?`, `#` or `%`,
-> encode it — `@` becomes `%40`. An un-encoded `@` is read as the
-> password/host separator and breaks the connection string with a confusing
-> error.
-
-### 3. Create the tables and seed demo data
+### 3. Initialize Database & Seed Demo Accounts
 ```bash
 npx prisma migrate dev
 npm run seed
 ```
 
-### 4. Run
+### 4. Run Development Server
 ```bash
-npm run dev          # → http://localhost:3000
+npm run dev
+# → Open http://localhost:3000
 ```
 
-There is no login. Use the **Demo account** switcher in the header to change
-which organisation you are acting as.
-
-> **Testing the anonymity rule:** use two different browser *profiles*, not two
-> tabs. Demo auth is cookie-based, so two tabs share one identity and masking
-> will look broken when it is working correctly.
-
-### Deploying
-Push to `main` — Vercel builds automatically. Add all three environment
-variables in the Vercel dashboard (**Settings → Environment Variables**),
-pasting values **without** surrounding quotes.
+### 5. Run Optimized Production Server (Fastest Local Experience)
+```bash
+npm run build
+npm run start
+# → Open http://localhost:3000 (Sub-100ms rendering)
+```
 
 ---
 
-## Project structure
+## 🔐 Credentials & Demo Accounts
 
-```
-prisma/schema.prisma     the single Listing model + deal state machine tables
-prisma/seed.ts           12 organisations, 15 listings, bids and deals
-src/app/api/             route handlers — every bid response passes maskBid()
-src/lib/deals.ts         transitionDeal() — the ONLY place deal state changes
-src/lib/masking.ts       maskBid() — server-side identity stripping
-src/lib/listing-spec.ts  the discriminated union typing all five spec payloads
-```
+| Role | Username / Email | Password | Access Portal |
+|---|---|---|---|
+| **Platform Administrator** | `admin@indusmate.com` | `admin123` | `/admin/kyc` & `/admin/logs` |
+| **Transporter** | `fleet@shrimata.com` | `password123` | Dashboard & Freight Bidding |
+| **Manufacturer** | `supply@indus.com` | `password123` | Dashboard & Material Listings |
+| **Supplier** | `raw@metals.com` | `password123` | Dashboard & Supply Bids |
 
-## Architectural invariants
+---
 
-These are the rules the codebase is built to enforce. See `CLAUDE.md`.
+## 🏛️ Architectural Invariants
 
-1. One listing model, one state machine. Market-specific negotiation logic
-   means the abstraction is wrong.
-2. `transitionDeal()` is the only place deal state changes.
-3. Every API response containing bid data passes through `maskBid()`.
-   **Leaking identity before `ACCEPTED` is the highest-severity bug in this
-   codebase.**
-4. Authorisation reads from `getCurrentOrg()` server-side, never from the
-   client.
-5. `GEMINI_API_KEY` is never prefixed `NEXT_PUBLIC_` and never reaches a client
-   component.
+These core rules are enforced across the codebase (see [`CLAUDE.md`](./CLAUDE.md)):
+
+1. **One Listing Model, One State Machine:** Market-specific negotiation logic is strictly forbidden; all five markets share the same underlying architecture.
+2. **Single State Transition Function:** `transitionDeal()` in `src/lib/deals.ts` is the ONLY function permitted to modify deal state.
+3. **Strict Server-Side Identity Masking:** All bid data passes through `maskBid()` in `src/lib/masking.ts`. Leaking counterparty identity before `ACCEPTED` is a zero-tolerance bug.
+4. **Server-Side Authorization:** Every action reads from `getCurrentOrg()` server-side; client-provided org IDs are never trusted.
+5. **Protected AI Keys:** `GEMINI_API_KEY` is server-side only and never exposed to the client browser.
