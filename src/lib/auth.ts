@@ -21,11 +21,13 @@ import { auth } from "@/auth";
  * THE authorisation source of truth. Never accept an org id from a request
  * body or query string in its place.
  */
+import { redirect } from "next/navigation";
+
 export async function getCurrentOrg(): Promise<Organisation> {
   const session = await auth();
   
   if (!session?.user || !(session.user as any).orgId) {
-    throw new Error("Unauthorized: No organisation found for current user.");
+    redirect("/login");
   }
 
   const orgId = (session.user as any).orgId;
@@ -34,7 +36,7 @@ export async function getCurrentOrg(): Promise<Organisation> {
   });
 
   if (!org) {
-    throw new Error("Organisation not found in database.");
+    redirect("/login");
   }
 
   return org;

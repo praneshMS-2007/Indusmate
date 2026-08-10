@@ -7,7 +7,13 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   const isAuthPage = pathname.startsWith("/login") || pathname.startsWith("/signup");
+  const isPublicApi = pathname.startsWith("/api/auth");
   
+  // If user is NOT logged in and tries to access protected pages, redirect to /login
+  if (!session && !isAuthPage && !isPublicApi) {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
+
   // If user is logged in and tries to access login/signup, redirect to home
   if (isAuthPage && session) {
     return NextResponse.redirect(new URL("/", req.url));
