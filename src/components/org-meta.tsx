@@ -25,6 +25,11 @@ export const ORG_TYPE_META: Record<
     icon: Recycle,
     className: "text-teal",
   },
+  PLATFORM_ADMIN: {
+    label: "Platform Admin",
+    icon: Factory,
+    className: "text-slate-400",
+  },
 };
 
 /**

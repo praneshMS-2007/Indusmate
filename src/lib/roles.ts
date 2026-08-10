@@ -35,6 +35,7 @@ import {
   Recycle,
   Search,
   Truck,
+  Users,
 } from "lucide-react";
 
 import type { ListingType } from "./listing-spec";
@@ -235,6 +236,19 @@ export const ROLE_META: Record<OrgType, RoleMeta> = {
       { id: "deals-active", span: "half" },
       { id: "my-listings", span: "full" },
     ],
+  },
+  PLATFORM_ADMIN: {
+    label: "Platform Admin",
+    icon: Factory,
+    accentClass: "text-slate-400",
+    heroClass: "border-slate-400/40",
+    tagline: "Platform administrator.",
+    posture: "Manages users and KYC approvals.",
+    primary: { label: "Manage KYC", href: "/admin/kyc", icon: Search },
+    secondary: { label: "Manage Users", href: "/admin/users", icon: Users },
+    homeMarkets: [],
+    kpis: ["sealed-bids-inbound", "open-listings-mine", "deals-in-flight", "rating"],
+    cards: [],
   },
 };
 

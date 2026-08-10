@@ -5,6 +5,7 @@ import { AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { resubmitKyc } from "./actions";
+import { LogoutButton } from "@/components/logout-button";
 
 export default async function KycRejectedPage() {
   const session = await auth();
@@ -51,9 +52,11 @@ export default async function KycRejectedPage() {
               Upload Documents Again
             </Button>
           </form>
-          <Button asChild variant="ghost" className="text-text-tertiary">
-            <Link href="/api/auth/signout">Log out</Link>
-          </Button>
+          <LogoutButton 
+            label="Log out" 
+            variant="ghost" 
+            className="w-full text-text-tertiary" 
+          />
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LogoutButton } from "@/components/logout-button";
 import { User, UserPen, HelpCircle, LogOut, Globe } from "lucide-react";
 
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -87,20 +88,12 @@ export default function SettingsPage() {
             </div>
           </Link>
 
-          <form action="/api/auth/signout" method="POST">
-            <button 
-              type="submit"
-              className="elevated flex w-full items-center gap-3 rounded-md border border-line bg-surface-raised p-4 text-left transition-colors hover:border-danger/50"
-            >
-              <span className="grid size-8 shrink-0 place-items-center rounded-md bg-danger-muted text-danger">
-                <LogOut className="size-4" />
-              </span>
-              <div className="flex-1">
-                <p className="font-medium text-sm text-danger">Sign Out</p>
-                <p className="type-caption text-text-secondary">Log out of your current session.</p>
-              </div>
-            </button>
-          </form>
+          <LogoutButton 
+            label="Sign Out"
+            showIcon={true}
+            variant="ghost"
+            className="elevated flex h-auto w-full items-center justify-start gap-3 rounded-md border border-line bg-surface-raised p-4 transition-colors hover:border-danger/50 hover:bg-surface-raised text-danger font-medium hover:text-danger"
+          />
         </div>
       </section>
     </main>

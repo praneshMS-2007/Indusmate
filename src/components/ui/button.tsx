@@ -64,6 +64,12 @@ const buttonVariants = cva(
   },
 );
 
+export interface ButtonProps extends React.ComponentProps<"button">, VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+  /** Shows a spinner, blocks input, and announces busy to screen readers. */
+  loading?: boolean;
+}
+
 function Button({
   className,
   variant = "default",
@@ -73,12 +79,7 @@ function Button({
   children,
   disabled,
   ...props
-}: React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean;
-    /** Shows a spinner, blocks input, and announces busy to screen readers. */
-    loading?: boolean;
-  }) {
+}: ButtonProps) {
   const Comp = asChild ? Slot.Root : "button";
 
   return (

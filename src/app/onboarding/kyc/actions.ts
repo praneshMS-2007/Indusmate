@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 export async function submitKycDocuments(formData: FormData) {
   const session = await auth();
   if (!session?.user?.id) {
-    return { error: "Unauthorized" };
+    throw new Error("Unauthorized");
   }
 
   // Look up org via JWT first, then fall back to User relationship
@@ -21,7 +21,7 @@ export async function submitKycDocuments(formData: FormData) {
     org = user?.org;
   }
   if (!org) {
-    return { error: "No organization found" };
+    throw new Error("No organization found");
   }
 
   // Get all uploaded document types from the form

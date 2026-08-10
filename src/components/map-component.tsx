@@ -69,6 +69,7 @@ export default function MapComponent({
   const [searchQuery, setSearchQuery] = useState("");
   const [cityName, setCityName] = useState(initialCity);
   const [isSearching, setIsSearching] = useState(false);
+  const [mapTheme, setMapTheme] = useState<"light" | "dark">("light");
 
   // Reverse Geocoding
   const reverseGeocode = useCallback(async (lat: number, lng: number) => {
@@ -123,6 +124,29 @@ export default function MapComponent({
     }
   };
 
+  const handleLocateMe = () => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          setPosition([lat, lng]);
+          reverseGeocode(lat, lng);
+          window.dispatchEvent(new CustomEvent("map-set-location", {
+            detail: { lat, lng }
+          }));
+        },
+        (error) => {
+          console.error("Location error:", error);
+          alert("Could not access your location. Please check browser permissions.");
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    } else {
+      alert("Geolocation is not supported by your browser.");
+    }
+  };
+
   return (
     <div className="flex flex-col bg-[#161C24] p-4 h-[80vh] max-h-[700px]">
       {/* Header */}
@@ -160,27 +184,35 @@ export default function MapComponent({
 
       {/* Map Area */}
       <div className="relative mt-4 flex-1 overflow-hidden rounded-2xl border border-white/10">
-        <MapContainer center={position} zoom={13} style={{ height: "100%", width: "100%", backgroundColor: "#a5bfdd" }} zoomControl={false}>
+        <MapContainer center={position} zoom={13} style={{ height: "100%", width: "100%", backgroundColor: mapTheme === "dark" ? "#161C24" : "#a5bfdd" }} zoomControl={false}>
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+            url={mapTheme === "dark" 
+              ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+              : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+            }
           />
           <Marker position={position} icon={customIcon} />
           <MapEvents onLocationChange={handleLocationChange} />
         </MapContainer>
 
         {/* Floating Toolbar on Map */}
-        <div className="absolute right-4 top-4 z-[400] flex overflow-hidden rounded-xl bg-[#212B36] border border-white/10 shadow-lg">
-          <button className="flex size-10 items-center justify-center bg-[#20C997] text-[#161C24] hover:brightness-110">
-            <MapIcon className="size-5" />
+        <div className="absolute right-4 top-4 z-[400] flex flex-col gap-2">
+          <button 
+            type="button"
+            onClick={() => setMapTheme(t => t === "light" ? "dark" : "light")}
+            className="flex size-10 items-center justify-center rounded-xl bg-[#212B36] border border-white/10 shadow-lg text-gray-400 hover:text-white transition-colors"
+            title="Toggle map theme"
+          >
+            {mapTheme === "light" ? <Moon className="size-5" /> : <MapIcon className="size-5" />}
           </button>
-          <button className="flex size-10 items-center justify-center text-gray-400 hover:text-white transition-colors">
-            <Layers className="size-5" />
-          </button>
-          <button className="flex size-10 items-center justify-center text-gray-400 hover:text-white transition-colors">
-            <Moon className="size-5" />
-          </button>
-          <button className="flex size-10 items-center justify-center text-gray-400 hover:text-white transition-colors">
+          
+          <button 
+            type="button"
+            onClick={handleLocateMe}
+            className="flex size-10 items-center justify-center rounded-xl bg-[#20C997] shadow-lg text-[#161C24] hover:brightness-110 transition-all"
+            title="Use current location"
+          >
             <LocateFixed className="size-5" />
           </button>
         </div>

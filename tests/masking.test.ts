@@ -22,6 +22,7 @@ function org(overrides: Partial<Organisation> & { id: string }): Organisation {
     lat: 22.63,
     lng: 75.73,
     verified: true,
+    kycStatus: "APPROVED",
     rating: 4.9,
     dealCount: 241,
     onTimePct: 98,

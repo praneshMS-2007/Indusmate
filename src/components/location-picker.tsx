@@ -71,7 +71,7 @@ export function LocationPicker({ isOpen, onClose, onLocationSelect, initialLat, 
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-md border-line bg-[#161C24] p-0 text-white sm:max-w-lg md:max-w-2xl overflow-hidden rounded-2xl" hideCloseButton>
+      <DialogContent className="max-w-md border-line bg-[#161C24] p-0 text-white sm:max-w-lg md:max-w-2xl overflow-hidden rounded-2xl" showCloseButton={false}>
         {step === "PERMISSION" && (
           <div className="p-6">
             <div className="flex items-start justify-between">

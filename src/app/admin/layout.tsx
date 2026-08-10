@@ -1,7 +1,8 @@
 import { getCurrentOrg } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { ShieldCheck, LogOut } from "lucide-react";
+import { LogoutButton } from "@/components/logout-button";
+import { ShieldCheck, Users, LogOut, FileText } from "lucide-react";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   let org;
@@ -36,10 +37,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         </nav>
         
         <div className="p-4 border-t border-sidebar-border">
-          <Link href="/api/auth/signout" className="flex items-center gap-3 px-3 py-2 text-sm text-sidebar-foreground/70 hover:text-sidebar-foreground">
-            <LogOut className="size-4" />
-            Log out
-          </Link>
+          <LogoutButton 
+            label="Log out" 
+            showIcon={true}
+            variant="ghost" 
+            className="flex w-full justify-start items-center gap-3 px-3 py-2 text-sm text-sidebar-foreground/70 hover:text-sidebar-foreground" 
+          />
         </div>
       </aside>
 
@@ -47,9 +50,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <main className="flex-1 flex flex-col">
         <header className="flex h-16 items-center justify-between border-b border-line bg-surface px-6 lg:hidden">
           <span className="type-display font-bold">Admin Portal</span>
-          <Link href="/api/auth/signout">
-            <LogOut className="size-5 text-text-tertiary" />
-          </Link>
+          <LogoutButton 
+            label=""
+            showIcon={true}
+            variant="ghost"
+            className="text-text-tertiary px-2"
+          />
         </header>
         <div className="p-6 flex-1">
           {children}

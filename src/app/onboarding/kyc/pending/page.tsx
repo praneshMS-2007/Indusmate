@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { Clock, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { LogoutButton } from "@/components/logout-button";
 
 export default async function KycPendingPage() {
   const session = await auth();
@@ -40,14 +41,16 @@ export default async function KycPendingPage() {
 
         <div className="mt-8 flex flex-col gap-3">
           <Button asChild variant="outline">
-            <Link href="/onboarding/kyc/pending">
+            <a href="/onboarding/kyc/pending">
               <RefreshCcw className="mr-2 size-4" />
               Check Status Again
-            </Link>
+            </a>
           </Button>
-          <Button asChild variant="ghost" className="text-text-tertiary">
-            <Link href="/api/auth/signout">Log out</Link>
-          </Button>
+          <LogoutButton 
+            label="Log out" 
+            variant="ghost" 
+            className="w-full text-text-tertiary" 
+          />
         </div>
       </div>
     </div>
