@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { BadgeCheck, FileText, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { processKyc } from "./actions";
 
 import Link from "next/link";
@@ -59,14 +60,14 @@ export default async function AdminKycPage() {
                 
                 <div className="flex gap-2">
                   <form action={processKyc.bind(null, org.id, "REJECTED")}>
-                    <Button type="submit" variant="outline" className="text-red-500 hover:bg-red-500/10 hover:text-red-600">
+                    <SubmitButton type="submit" variant="outline" className="text-red-500 hover:bg-red-500/10 hover:text-red-600">
                       <XCircle className="mr-2 size-4" /> Reject
-                    </Button>
+                    </SubmitButton>
                   </form>
                   <form action={processKyc.bind(null, org.id, "APPROVED")}>
-                    <Button type="submit" className="bg-teal-600 hover:bg-teal-700 text-white">
+                    <SubmitButton type="submit" className="bg-teal-600 hover:bg-teal-700 text-white">
                       <BadgeCheck className="mr-2 size-4" /> Approve
-                    </Button>
+                    </SubmitButton>
                   </form>
                 </div>
               </div>
