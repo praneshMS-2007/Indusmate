@@ -26,20 +26,30 @@ import { redirect } from "next/navigation";
 export async function getCurrentOrg(): Promise<Organisation> {
   const session = await auth();
   
-  if (!session?.user || !(session.user as any).orgId) {
+  if (!session?.user) {
     redirect("/login");
   }
 
   const orgId = (session.user as any).orgId;
-  const org = await prisma.organisation.findUnique({
-    where: { id: orgId }
-  });
-
-  if (!org) {
-    redirect("/login");
+  if (!orgId) {
+    redirect("/welcome");
   }
 
-  return org;
+  try {
+    const org = await prisma.organisation.findUnique({
+      where: { id: orgId }
+    });
+
+    if (!org) {
+      redirect("/welcome");
+    }
+
+    return org;
+  } catch (e) {
+    if ((e as any)?.digest?.startsWith("NEXT_REDIRECT")) throw e;
+    console.error("[AUTH] Database query error in getCurrentOrg:", e);
+    redirect("/login");
+  }
 }
 
 
