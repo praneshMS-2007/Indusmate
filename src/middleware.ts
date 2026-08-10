@@ -1,28 +1,27 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { auth } from "@/auth";
 
-export async function middleware(req: NextRequest) {
-  const session = await auth();
+export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
+  const sessionToken =
+    req.cookies.get("authjs.session-token")?.value ||
+    req.cookies.get("__Secure-authjs.session-token")?.value ||
+    req.cookies.get("next-auth.session-token")?.value ||
+    req.cookies.get("__Secure-next-auth.session-token")?.value;
+
+  const hasSession = !!sessionToken;
   const isAuthPage = pathname.startsWith("/login") || pathname.startsWith("/signup");
   const isPublicApi = pathname.startsWith("/api/auth");
-  
-  // If user is NOT logged in and tries to access protected pages, redirect to /login
-  if (!session && !isAuthPage && !isPublicApi) {
+
+  // Redirect unauthenticated users away from protected routes
+  if (!hasSession && !isAuthPage && !isPublicApi) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  // If user is logged in and tries to access login/signup, redirect to home
-  if (isAuthPage && session) {
+  // Redirect authenticated users away from login/signup
+  if (hasSession && isAuthPage) {
     return NextResponse.redirect(new URL("/", req.url));
-  }
-
-  if (session && !(session.user as any).orgId) {
-    if (!pathname.startsWith("/welcome") && !pathname.startsWith("/onboarding") && !isAuthPage && !pathname.startsWith("/api") && !pathname.startsWith("/admin")) {
-      return NextResponse.redirect(new URL("/welcome", req.url));
-    }
   }
 
   const requestHeaders = new Headers(req.headers);
@@ -37,12 +36,6 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
     '/((?!_next/static|_next/image|favicon.ico).*)',
   ],
 };
