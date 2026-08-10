@@ -26,7 +26,6 @@
 - **Live Deployed Link (Vercel):** [https://indusmate.vercel.app](https://indusmate.vercel.app)
 - **Demo Video Drive Link:** [https://drive.google.com/drive/folders/1uNk-gQDxbypHJ-23VQl4YRwfi5fk1_gH](https://drive.google.com/drive/folders/1uNk-gQDxbypHJ-23VQl4YRwfi5fk1_gH)
 - **Presentation Deck Canva Link:** [https://canva.link/rbn90jqm4jr5e5m](https://canva.link/rbn90jqm4jr5e5m)
-- **Demo Script (Step-by-Step):** [`DEMO.md`](./DEMO.md)
 
 ---
 
