@@ -13,6 +13,12 @@ export function middleware(req: NextRequest) {
   const hasSession = !!sessionToken;
   const isAuthPage = pathname.startsWith("/login") || pathname.startsWith("/signup");
   const isPublicApi = pathname.startsWith("/api/auth");
+  const isStaticAsset = pathname.includes(".") || pathname.startsWith("/_next");
+
+  // Allow static assets (like /logo.png, /login-bg.png, etc.) to load freely
+  if (isStaticAsset) {
+    return NextResponse.next();
+  }
 
   // Redirect unauthenticated users away from protected routes
   if (!hasSession && !isAuthPage && !isPublicApi) {
